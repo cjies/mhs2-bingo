@@ -1,6 +1,7 @@
 import { promises as fs } from 'fs';
 import neatCsv from 'neat-csv';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { join } from 'path';
 
 import { ATTACK_TYPE } from '../../constants/attackType';
 import { GENE_TYPE } from '../../constants/gene';
@@ -29,8 +30,13 @@ const ATTACK_TYPE_MAP: Record<string, ATTACK_TYPE> = {
 };
 
 const fetchGenesByType = async (geneType: GENE_TYPE): Promise<Gene[]> => {
-  const csvPath = CSV_PATH[geneType];
-  const fileBuffer = await fs.readFile(csvPath);
+  const basePath =
+    process.env.NODE_ENV === 'production'
+      ? join(process.cwd(), '.next/server/chunks')
+      : process.cwd();
+  const csvFilePath = join(basePath, CSV_PATH[geneType]);
+
+  const fileBuffer = await fs.readFile(csvFilePath, 'utf-8');
   const rows = await neatCsv(fileBuffer);
 
   return rows.map((data, index) => {
@@ -64,6 +70,6 @@ export default async function handler(
     res.status(200).json(genes);
   } catch (err) {
     console.error(err);
-    res.status(500);
+    res.status(500).json(err);
   }
 }
