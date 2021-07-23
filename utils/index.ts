@@ -1,67 +1,67 @@
 import { Maybe } from '../interfaces/common';
 import {
-  Slot,
-  SlotId,
-  SlotMatchResult,
-  SlotRow,
-  SlotTable,
-} from '../interfaces/slot';
+  Gene,
+  GeneId,
+  GeneMatchResult,
+  GeneRow,
+  GeneTable,
+} from '../interfaces/gene';
 
 /**
- * Check if type or category is matched on each slot
+ * Check if type or category is matched on each gene
  */
-const areSlotsMatched = (slots: Maybe<Slot>[]): SlotMatchResult => {
-  const sampleType = slots[0]?.type;
-  const isTypeMatched = slots.every((slot) => {
-    if (!slot) {
+const areGenesMatched = (genes: Maybe<Gene>[]): GeneMatchResult => {
+  const sampleGeneType = genes[0]?.type;
+  const isGeneTypeMatched = genes.every((gene) => {
+    if (!gene) {
       return false;
     }
-    return slot.type === sampleType;
+    return gene.type === sampleGeneType;
   });
 
-  const sampleCategory = slots[0]?.category;
-  const isCategoryMatched = slots.every((slot) => {
-    if (!slot) {
+  const sampleAttackType = genes[0]?.attackType;
+  const isAttackTypeMatched = genes.every((gene) => {
+    if (!gene) {
       return false;
     }
-    return slot.category === sampleCategory;
+    return gene.attackType === sampleAttackType;
   });
 
   return {
-    matchedType: isTypeMatched ? sampleType ?? null : null,
-    matchedCategory: isCategoryMatched ? sampleCategory ?? null : null,
+    geneType: isGeneTypeMatched ? sampleGeneType ?? null : null,
+    attackType: isAttackTypeMatched ? sampleAttackType ?? null : null,
   };
 };
 
 /**
  * Rotate 90degree, turn columns to rows
  */
-const rotateTable = (table: SlotTable) => {
+const rotateTable = (table: GeneTable) => {
   return table.map((row, i) =>
     row.map((_, j) => table[table.length - 1 - j][i])
   );
 };
 
-export const checkHorizontalSlots = (table: SlotTable) => {
-  return table.reduce<{ [index: number]: SlotMatchResult }>(
+export const checkHorizontalGenes = (table: GeneTable) => {
+  return table.reduce<{ [index: number]: GeneMatchResult }>(
     (result, row, index) => {
       return {
         ...result,
-        [index]: areSlotsMatched(row),
+        [index]: areGenesMatched(row),
       };
     },
     {}
   );
 };
 
-export const checkVerticalSlots = (table: SlotTable) => {
+export const checkVerticalGenes = (table: GeneTable) => {
   const rotatedTable = rotateTable(table);
-  return checkHorizontalSlots(rotatedTable);
+  return checkHorizontalGenes(rotatedTable);
 };
 
-export const checkDiagonalSlots = (table: SlotTable) => {
-  const diagonalLeft: SlotRow = [];
-  const diagonalRight: SlotRow = [];
+export const checkDiagonalGenes = (table: GeneTable) => {
+  const diagonalLeft: GeneRow = [];
+  const diagonalRight: GeneRow = [];
 
   for (let i = 0; i < table.length; i++) {
     diagonalLeft.push(table[i][i]);
@@ -69,15 +69,15 @@ export const checkDiagonalSlots = (table: SlotTable) => {
   }
 
   const idsOnDiagonalAxis = [...diagonalLeft, ...diagonalRight].reduce<
-    SlotId[]
-  >((ids, slot) => {
-    if (slot && !ids.includes(slot.id)) {
-      ids.push(slot.id);
+    GeneId[]
+  >((ids, gene) => {
+    if (gene && !ids.includes(gene.id)) {
+      ids.push(gene.id);
     }
 
     return ids;
   }, []);
-  const matchedResult = checkHorizontalSlots([diagonalLeft, diagonalRight]);
+  const matchedResult = checkHorizontalGenes([diagonalLeft, diagonalRight]);
 
   return {
     ids: idsOnDiagonalAxis,

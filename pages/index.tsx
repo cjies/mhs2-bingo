@@ -1,92 +1,92 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import BingoTable from '../components/BingoTable';
-import { CATEGORY } from '../constants/category';
-import { TYPE } from '../constants/type';
-import { Slot, SlotTable } from '../interfaces/slot';
+import Bingo from '../components/Bingo';
+import { ATTACK_TYPE } from '../constants/attackType';
+import { GENE_TYPE } from '../constants/gene';
+import { Gene, GeneTable } from '../interfaces/gene';
 
 const Container = styled.div`
   display: flex;
 `;
 
-const slot1 = {
+const gene1 = {
   id: '1',
-  category: CATEGORY.POWER,
-  type: TYPE.NORMAL,
+  type: GENE_TYPE.NORMAL,
+  attackType: ATTACK_TYPE.POWER,
 };
-const slot2 = {
+const gene2 = {
   id: '2',
-  category: CATEGORY.POWER,
-  type: TYPE.NORMAL,
+  type: GENE_TYPE.NORMAL,
+  attackType: ATTACK_TYPE.POWER,
 };
-const slot3 = {
+const gene3 = {
   id: '3',
-  category: CATEGORY.POWER,
-  type: TYPE.DRAGON,
+  type: GENE_TYPE.DRAGON,
+  attackType: ATTACK_TYPE.POWER,
 };
 
-const slot4 = {
+const gene4 = {
   id: '4',
-  category: CATEGORY.SPEED,
-  type: TYPE.FIRE,
+  type: GENE_TYPE.FIRE,
+  attackType: ATTACK_TYPE.SPEED,
 };
-const slot5 = {
+const gene5 = {
   id: '5',
-  category: CATEGORY.POWER,
-  type: TYPE.ICE,
+  type: GENE_TYPE.ICE,
+  attackType: ATTACK_TYPE.POWER,
 };
-const slot6 = {
+const gene6 = {
   id: '6',
-  category: CATEGORY.SPEED,
-  type: TYPE.ICE,
+  type: GENE_TYPE.ICE,
+  attackType: ATTACK_TYPE.SPEED,
 };
 
-const slot7 = {
+const gene7 = {
   id: '7',
-  category: CATEGORY.SPEED,
-  type: TYPE.DRAGON,
+  type: GENE_TYPE.DRAGON,
+  attackType: ATTACK_TYPE.SPEED,
 };
-const slot8 = {
+const gene8 = {
   id: '8',
-  category: CATEGORY.SKILL,
-  type: TYPE.DRAGON,
+  type: GENE_TYPE.DRAGON,
+  attackType: ATTACK_TYPE.SKILL,
 };
-const slot9 = {
+const gene9 = {
   id: '9',
-  category: CATEGORY.SKILL,
-  type: TYPE.ICE,
+  type: GENE_TYPE.ICE,
+  attackType: ATTACK_TYPE.SKILL,
 };
 
 const table = [
-  [slot1, slot2, slot3],
-  [slot4, slot5, slot6],
-  [slot7, slot8, slot9],
-] as SlotTable;
+  [gene1, gene2, gene3],
+  [gene4, gene5, gene6],
+  [gene7, gene8, gene9],
+] as GeneTable;
 
-function Bingo() {
-  const [allSlots, setAllSlots] = useState<Slot[]>([]);
+function Home() {
+  const [allGenes, setAllGenes] = useState<Gene[]>([]);
 
   useEffect(() => {
-    const fetchSlots = async () => {
-      const res = await fetch('/api/slots');
+    const fetchGenes = async () => {
+      const res = await fetch('/api/genes');
 
       if (!res.ok) {
         return;
       }
 
-      const slots = await res.json();
-      setAllSlots(slots);
+      const genes = await res.json();
+      setAllGenes(genes);
     };
 
-    fetchSlots();
+    fetchGenes();
   }, []);
 
   return (
     <Container>
-      <BingoTable table={table} />
+      <Bingo table={table} />
     </Container>
   );
 }
 
-export default Bingo;
+export default Home;
