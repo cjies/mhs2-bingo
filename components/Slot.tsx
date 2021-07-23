@@ -1,19 +1,15 @@
 import { FC, memo } from 'react';
 import styled, { css } from 'styled-components';
 
-import {
-  SLOT_COLOR,
-  SLOT_COLOR_EMPTY,
-  SLOT_PROPERTY,
-  SLOT_TYPE,
-  SLOT_TYPE_ICON,
-} from '../constants';
-import { SlotId } from '../interfaces';
+import { CATEGORY, CATEGORY_ICON } from '../constants/category';
+import { SLOT_COLOR, SLOT_EMPTY_COLOR } from '../constants/slot';
+import { TYPE } from '../constants/type';
+import { SlotId } from '../interfaces/slot';
 
 interface SlotContainerProps {
   $size: number; // in rem
   $isMatch: boolean;
-  $property: SLOT_PROPERTY;
+  $type: TYPE;
 }
 
 const SlotContainer = styled.div<SlotContainerProps>`
@@ -25,8 +21,7 @@ const SlotContainer = styled.div<SlotContainerProps>`
   width: ${(props) => `${props.$size}rem` || '5rem'};
   height: ${(props) => `${props.$size}rem` || '5rem'};
   border-radius: 50%;
-  background-color: ${(props) =>
-    SLOT_COLOR[props.$property] ?? SLOT_COLOR_EMPTY};
+  background-color: ${(props) => SLOT_COLOR[props.$type] ?? SLOT_EMPTY_COLOR};
 
   ${(props) =>
     props.$isMatch &&
@@ -54,27 +49,27 @@ const Icon = styled.div<{ $size: number }>`
 interface Props {
   id: SlotId;
   size: number; // in rem
-  type: SLOT_TYPE;
-  property: SLOT_PROPERTY;
+  type: TYPE;
+  category: CATEGORY;
   isTypeMatch: boolean;
-  isPropertyMatch: boolean;
+  isCategoryMatch: boolean;
 }
 
 const Slot: FC<Props> = ({
   id,
   size,
   type,
-  property,
+  category,
   isTypeMatch,
-  isPropertyMatch,
+  isCategoryMatch,
 }) => {
   return (
     <SlotContainer
       $size={size}
-      $isMatch={isTypeMatch || isPropertyMatch}
-      $property={property}
+      $isMatch={isTypeMatch || isCategoryMatch}
+      $type={type}
     >
-      <Icon $size={size / 2}>{SLOT_TYPE_ICON[type]}</Icon>
+      <Icon $size={size / 2}>{CATEGORY_ICON[category]}</Icon>
       <span>{id}</span>
     </SlotContainer>
   );

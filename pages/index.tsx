@@ -1,66 +1,67 @@
 import styled from 'styled-components';
 
-import BingoTable from '../src/components/BingoTable';
-import { SLOT_PROPERTY, SLOT_TYPE } from '../src/constants';
-import { MaybeSlot, SlotTable } from '../src/interfaces';
+import BingoTable from '../components/BingoTable';
+import { CATEGORY } from '../constants/category';
+import { TYPE } from '../constants/type';
+import { Slot, SlotTable } from '../interfaces/slot';
 
 const Container = styled.div`
   display: flex;
 `;
 
-const slot1: MaybeSlot = {
+const slot1 = {
   id: '1',
-  type: SLOT_TYPE.POWER,
-  property: SLOT_PROPERTY.NORMAL,
+  category: CATEGORY.POWER,
+  type: TYPE.NORMAL,
 };
-const slot2: MaybeSlot = {
+const slot2 = {
   id: '2',
-  type: SLOT_TYPE.POWER,
-  property: SLOT_PROPERTY.NORMAL,
+  category: CATEGORY.POWER,
+  type: TYPE.NORMAL,
 };
-const slot3: MaybeSlot = {
+const slot3 = {
   id: '3',
-  type: SLOT_TYPE.POWER,
-  property: SLOT_PROPERTY.DRAGON,
+  category: CATEGORY.POWER,
+  type: TYPE.DRAGON,
 };
 
-const slot4: MaybeSlot = {
+const slot4 = {
   id: '4',
-  type: SLOT_TYPE.SPEED,
-  property: SLOT_PROPERTY.FIRE,
+  category: CATEGORY.SPEED,
+  type: TYPE.FIRE,
 };
-const slot5: MaybeSlot = {
+const slot5 = {
   id: '5',
-  type: SLOT_TYPE.POWER,
-  property: SLOT_PROPERTY.ICE,
+  category: CATEGORY.POWER,
+  type: TYPE.ICE,
 };
-const slot6: MaybeSlot = {
+const slot6 = {
   id: '6',
-  type: SLOT_TYPE.SPEED,
-  property: SLOT_PROPERTY.ICE,
+  category: CATEGORY.SPEED,
+  type: TYPE.ICE,
 };
 
-const slot7: MaybeSlot = {
+const slot7 = {
   id: '7',
-  type: SLOT_TYPE.SPEED,
-  property: SLOT_PROPERTY.DRAGON,
+  category: CATEGORY.SPEED,
+  type: TYPE.DRAGON,
 };
-const slot8: MaybeSlot = {
+const slot8 = {
   id: '8',
-  type: SLOT_TYPE.SKILL,
-  property: SLOT_PROPERTY.DRAGON,
+  category: CATEGORY.SKILL,
+  type: TYPE.DRAGON,
 };
-const slot9: MaybeSlot = {
+const slot9 = {
   id: '9',
-  type: SLOT_TYPE.SKILL,
-  property: SLOT_PROPERTY.ICE,
+  category: CATEGORY.SKILL,
+  type: TYPE.ICE,
 };
 
-const table: SlotTable = [
+const table = [
   [slot1, slot2, slot3],
   [slot4, slot5, slot6],
   [slot7, slot8, slot9],
-];
+] as SlotTable;
 
 function Bingo() {
   return (

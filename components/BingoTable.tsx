@@ -1,7 +1,7 @@
 import React, { FC, memo, useMemo } from 'react';
 import styled from 'styled-components';
 
-import { SlotTable } from '../interfaces';
+import { SlotTable } from '../interfaces/slot';
 import {
   checkDiagonalSlots,
   checkHorizontalSlots,
@@ -34,10 +34,6 @@ const BingoTable: FC<Props> = ({ table }) => {
     return checkDiagonalSlots(table);
   }, [table]);
 
-  console.log('horizontalResult', horizontalResult);
-  console.log('verticalResult', verticalResult);
-  console.log('diagonalResult', diagonalResult);
-
   return (
     <Grid $column={table.length}>
       {table.map((row, rowIndex) => {
@@ -51,19 +47,19 @@ const BingoTable: FC<Props> = ({ table }) => {
           let isTypeMatch =
             horizontalResult[rowIndex]?.matchedType === slot.type ||
             verticalResult[columnIndex]?.matchedType === slot.type;
-          let isPropertyMatch =
-            horizontalResult[rowIndex]?.matchedProperty === slot.property ||
-            verticalResult[columnIndex]?.matchedProperty === slot.property;
+          let isCategoryMatch =
+            horizontalResult[rowIndex]?.matchedCategory === slot.category ||
+            verticalResult[columnIndex]?.matchedCategory === slot.category;
 
           if (diagonalResult.ids.includes(slot.id)) {
             isTypeMatch =
               diagonalResult.left.matchedType === slot.type ||
               diagonalResult.right.matchedType === slot.type ||
               isTypeMatch;
-            isPropertyMatch =
-              diagonalResult.left.matchedProperty === slot.property ||
-              diagonalResult.right.matchedProperty === slot.property ||
-              isPropertyMatch;
+            isCategoryMatch =
+              diagonalResult.left.matchedCategory === slot.category ||
+              diagonalResult.right.matchedCategory === slot.category ||
+              isCategoryMatch;
           }
 
           return (
@@ -72,9 +68,9 @@ const BingoTable: FC<Props> = ({ table }) => {
               size={5}
               id={slot.id}
               type={slot.type}
-              property={slot.property}
+              category={slot.category}
               isTypeMatch={isTypeMatch}
-              isPropertyMatch={isPropertyMatch}
+              isCategoryMatch={isCategoryMatch}
             />
           );
         });

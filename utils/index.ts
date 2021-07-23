@@ -1,12 +1,16 @@
+import { Maybe } from '../interfaces/common';
 import {
-  MaybeSlot,
+  Slot,
   SlotId,
   SlotMatchResult,
   SlotRow,
   SlotTable,
-} from './interfaces';
+} from '../interfaces/slot';
 
-const areSlotsMatched = (slots: MaybeSlot[]): SlotMatchResult => {
+/**
+ * Check if type or category is matched on each slot
+ */
+const areSlotsMatched = (slots: Maybe<Slot>[]): SlotMatchResult => {
   const sampleType = slots[0]?.type;
   const isTypeMatched = slots.every((slot) => {
     if (!slot) {
@@ -15,17 +19,17 @@ const areSlotsMatched = (slots: MaybeSlot[]): SlotMatchResult => {
     return slot.type === sampleType;
   });
 
-  const sampleProperty = slots[0]?.property;
-  const isPropertyMatched = slots.every((slot) => {
+  const sampleCategory = slots[0]?.category;
+  const isCategoryMatched = slots.every((slot) => {
     if (!slot) {
       return false;
     }
-    return slot.property === sampleProperty;
+    return slot.category === sampleCategory;
   });
 
   return {
     matchedType: isTypeMatched ? sampleType ?? null : null,
-    matchedProperty: isPropertyMatched ? sampleProperty ?? null : null,
+    matchedCategory: isCategoryMatched ? sampleCategory ?? null : null,
   };
 };
 
