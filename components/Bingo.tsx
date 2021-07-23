@@ -1,7 +1,7 @@
 import React, { FC, memo, useMemo } from 'react';
 import styled from 'styled-components';
 
-import { GeneTable } from '../interfaces/gene';
+import { GeneTable, SelectedGene } from '../interfaces/gene';
 import {
   checkDiagonalGenes,
   checkHorizontalGenes,
@@ -17,15 +17,17 @@ const Grid = styled.div<{ $column: number }>`
   display: grid;
   margin: 3rem auto;
   grid-template-columns: repeat(${(props) => props.$column}, min-content);
-  column-gap: 1rem;
-  row-gap: 1em;
+  grid-auto-rows: min-content;
+  column-gap: 2rem;
+  row-gap: 2em;
 `;
 
 interface Props {
   table: GeneTable;
+  onGeneClick: (selectedGene: SelectedGene) => void;
 }
 
-const Bingo: FC<Props> = ({ table }) => {
+const Bingo: FC<Props> = ({ table, onGeneClick }) => {
   const horizontalResult = useMemo(() => checkHorizontalGenes(table), [table]);
   const verticalResult = useMemo(() => checkVerticalGenes(table), [table]);
   const diagonalResult = useMemo(() => checkDiagonalGenes(table), [table]);
@@ -33,41 +35,52 @@ const Bingo: FC<Props> = ({ table }) => {
   return (
     <Grid $column={table.length}>
       {table.map((row, rowIndex) => {
-        return row.map((slot, columnIndex) => {
-          const slotKey = `slot.${slot?.id ?? `${rowIndex}.${columnIndex}`}`;
+        return row.map((gene, columnIndex) => {
+          const geneKey = `gene.${gene?.id ?? `${rowIndex}.${columnIndex}`}`;
 
-          if (!slot) {
-            return <EmptyGene key={slotKey} $size={GENE_SIZE} />;
+          const handleGeneClick = () => {
+            onGeneClick({ rowIndex, columnIndex, gene });
+          };
+
+          if (!gene) {
+            return (
+              <EmptyGene
+                key={geneKey}
+                $size={GENE_SIZE}
+                onClick={handleGeneClick}
+              />
+            );
           }
 
           let isGeneTypeMatch =
-            horizontalResult[rowIndex]?.geneType === slot.type ||
-            verticalResult[columnIndex]?.geneType === slot.type;
+            horizontalResult[rowIndex]?.geneType === gene.type ||
+            verticalResult[columnIndex]?.geneType === gene.type;
 
           let isAttackTypeMatch =
-            horizontalResult[rowIndex]?.attackType === slot.attackType ||
-            verticalResult[columnIndex]?.attackType === slot.attackType;
+            horizontalResult[rowIndex]?.attackType === gene.attackType ||
+            verticalResult[columnIndex]?.attackType === gene.attackType;
 
-          if (diagonalResult.ids.includes(slot.id)) {
+          if (diagonalResult.ids.includes(gene.id)) {
             isGeneTypeMatch =
-              diagonalResult.left.geneType === slot.type ||
-              diagonalResult.right.geneType === slot.type ||
+              diagonalResult.left.geneType === gene.type ||
+              diagonalResult.right.geneType === gene.type ||
               isGeneTypeMatch;
             isAttackTypeMatch =
-              diagonalResult.left.attackType === slot.attackType ||
-              diagonalResult.right.attackType === slot.attackType ||
+              diagonalResult.left.attackType === gene.attackType ||
+              diagonalResult.right.attackType === gene.attackType ||
               isAttackTypeMatch;
           }
 
           return (
             <Gene
-              key={slotKey}
+              key={geneKey}
               size={GENE_SIZE}
-              id={slot.id}
-              geneType={slot.type}
-              attackType={slot.attackType}
+              id={gene.id}
+              geneType={gene.type}
+              attackType={gene.attackType}
               isGeneTypeMatch={isGeneTypeMatch}
               isAttackTypeMatch={isAttackTypeMatch}
+              onClick={handleGeneClick}
             />
           );
         });

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { GENE_EMPTY_COLOR } from '../constants/gene';
 
@@ -14,9 +14,15 @@ const EmptyGene = styled.div<{ $size: number }>`
   background-color: ${GENE_EMPTY_COLOR};
   transition: box-shadow 0.2s ease;
 
-  &:hover {
-    box-shadow: 0 5px 15px rgba(145, 92, 182, 0.4);
-  }
+  ${(props) =>
+    props.onClick
+      ? css`
+          cursor: pointer;
+          &:hover {
+            box-shadow: 0 0 10px 5px rgba(0, 159, 255, 0.8);
+          }
+        `
+      : ''}
 `;
 
 export default EmptyGene;

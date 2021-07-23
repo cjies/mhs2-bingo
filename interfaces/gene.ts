@@ -25,3 +25,9 @@ export interface GeneMatchResult {
   geneType: GENE_TYPE | null;
   attackType: ATTACK_TYPE | null;
 }
+
+export interface SelectedGene {
+  rowIndex: number;
+  columnIndex: number;
+  gene: Maybe<Gene>;
+}

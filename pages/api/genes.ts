@@ -11,8 +11,8 @@ const CSV_PATH = {
   [GENE_TYPE.NORMAL]: 'csv/normal.csv',
   [GENE_TYPE.FIRE]: 'csv/fire.csv',
   [GENE_TYPE.WATER]: 'csv/water.csv',
-  [GENE_TYPE.ICE]: 'csv/ice.csv',
   [GENE_TYPE.THUNDER]: 'csv/thunder.csv',
+  [GENE_TYPE.ICE]: 'csv/ice.csv',
   [GENE_TYPE.DRAGON]: 'csv/dragon.csv',
 };
 
@@ -44,8 +44,8 @@ const fetchGenesByType = async (geneType: GENE_TYPE): Promise<Gene[]> => {
       skillType: SKILL_TYPE_MAP[data['主/被動']],
       skillName: data['技能名稱'],
       skillDescription: data['技能詳情'],
-      minLevel: +data['所需等級'],
-      sp: +data['消耗羈絆值'],
+      minLevel: +data['所需等級'] ?? 0,
+      sp: +data['消耗羈絆值'] || 0,
       monsters: data['可持有隨行獸'].split('、'),
     };
 

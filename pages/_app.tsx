@@ -1,3 +1,5 @@
+import 'antd/dist/antd.css';
+
 import { AppProps } from 'next/app';
 import { createGlobalStyle } from 'styled-components';
 

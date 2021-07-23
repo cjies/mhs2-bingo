@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "antd": "^4.16.8",
     "neat-csv": "^6.0.1",
     "next": "11.0.1",
     "react": "17.0.2",

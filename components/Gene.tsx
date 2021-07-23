@@ -18,7 +18,7 @@ const GeneContainer = styled(EmptyGene)<GeneContainerProps>`
   ${(props) =>
     props.$isHighlight &&
     css`
-      border: 3px solid #000;
+      border: 5px solid #000;
     `}
 `;
 
@@ -35,7 +35,6 @@ const Icon = styled.div<{ $size: number }>`
   align-items: center;
   justify-content: center;
   font-size: ${(props) => `${props.$size}rem` || '2rem'};
-  opacity: 0.5;
 `;
 
 interface Props {
@@ -43,8 +42,9 @@ interface Props {
   size: number; // in rem
   geneType: GENE_TYPE;
   attackType: ATTACK_TYPE;
-  isGeneTypeMatch: boolean;
-  isAttackTypeMatch: boolean;
+  isGeneTypeMatch?: boolean;
+  isAttackTypeMatch?: boolean;
+  onClick?: () => void;
 }
 
 const Gene: FC<Props> = ({
@@ -54,15 +54,16 @@ const Gene: FC<Props> = ({
   attackType,
   isGeneTypeMatch,
   isAttackTypeMatch,
+  onClick,
 }) => {
   return (
     <GeneContainer
       $size={size}
-      $isHighlight={isGeneTypeMatch || isAttackTypeMatch}
+      $isHighlight={!!(isGeneTypeMatch || isAttackTypeMatch)}
       $type={geneType}
+      onClick={onClick}
     >
       <Icon $size={size / 2}>{ATTACK_TYPE_ICON[attackType]}</Icon>
-      <span>{id}</span>
     </GeneContainer>
   );
 };
