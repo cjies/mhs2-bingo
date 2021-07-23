@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import BingoTable from '../components/BingoTable';
@@ -64,6 +65,23 @@ const table = [
 ] as SlotTable;
 
 function Bingo() {
+  const [allSlots, setAllSlots] = useState<Slot[]>([]);
+
+  useEffect(() => {
+    const fetchSlots = async () => {
+      const res = await fetch('/api/slots');
+
+      if (!res.ok) {
+        return;
+      }
+
+      const slots = await res.json();
+      setAllSlots(slots);
+    };
+
+    fetchSlots();
+  }, []);
+
   return (
     <Container>
       <BingoTable table={table} />
