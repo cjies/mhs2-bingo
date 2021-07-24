@@ -1,7 +1,9 @@
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.less';
 
 import { AppProps } from 'next/app';
 import { createGlobalStyle } from 'styled-components';
+
+import { DEFAULT_FONT_SIZE } from '@/constants/fontSize';
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -10,12 +12,13 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
       Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-    font-size: 14px;
+    font-size: ${DEFAULT_FONT_SIZE}px;
 
-    background-color: #d0aa7b;
+    background-color: #eac990;
     background-image: url('https://i.imgur.com/4rKVgAQ.png');
     background-repeat: no-repeat;
     background-size: cover;
+    background-attachment: fixed;
   }
 
   a {

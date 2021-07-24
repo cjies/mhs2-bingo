@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-import { GENE_EMPTY_COLOR } from '../constants/gene';
+import { GENE_EMPTY_COLOR } from '@/constants/gene';
 
 const EmptyGene = styled.div<{ $size: number }>`
   position: relative;

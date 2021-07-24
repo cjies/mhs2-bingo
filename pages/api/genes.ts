@@ -2,11 +2,12 @@ import { promises as fs } from 'fs';
 import neatCsv from 'neat-csv';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { join } from 'path';
+import shortHash from 'shorthash2';
 
-import { ATTACK_TYPE } from '../../constants/attackType';
-import { GENE_TYPE } from '../../constants/gene';
-import { SKILL_TYPE } from '../../constants/skillType';
-import { Gene, GeneId } from '../../interfaces/gene';
+import { ATTACK_TYPE } from '@/constants/attackType';
+import { GENE_TYPE } from '@/constants/gene';
+import { SKILL_TYPE } from '@/constants/skillType';
+import { Gene, GeneId } from '@/interfaces/gene';
 
 const CSV_PATH = {
   [GENE_TYPE.NORMAL]: 'csv/normal.csv',
@@ -41,7 +42,8 @@ const fetchGenesByType = async (geneType: GENE_TYPE): Promise<Gene[]> => {
 
   return rows.map((data, index) => {
     const attackType = ATTACK_TYPE_MAP[data['類型']];
-    const id = `${geneType}-${attackType}-${index}` as GeneId;
+    const id = shortHash(`${geneType}-${attackType}-${index}`) as GeneId;
+
     const gene: Gene = {
       id,
       type: geneType,

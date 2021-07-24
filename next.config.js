@@ -1,7 +1,9 @@
 const CopyPlugin = require('copy-webpack-plugin');
+const withLess = require('next-with-less');
 
-module.exports = {
+module.exports = withLess({
   reactStrictMode: true,
+
   webpack: function (config, { dev, isServer }) {
     // Fixes npm packages that depend on `fs` module
     if (!isServer) {
@@ -19,4 +21,12 @@ module.exports = {
 
     return config;
   },
-};
+  // customize antdesign theme
+  lessLoaderOptions: {
+    lessOptions: {
+      modifyVars: {
+        'primary-color': '#381a02',
+      },
+    },
+  },
+});

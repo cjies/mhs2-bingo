@@ -1,21 +1,20 @@
 import React, { FC, memo, useMemo } from 'react';
 import styled from 'styled-components';
 
-import { GeneTable, SelectedGene } from '../interfaces/gene';
+import { GeneTable, SelectedGene } from '@/interfaces/gene';
 import {
   checkDiagonalGenes,
   checkHorizontalGenes,
   checkVerticalGenes,
-} from '../utils';
+} from '@/utils';
+
 import EmptyGene from './EmptyGene';
 import Gene from './Gene';
 
 const GENE_SIZE = 8; // in rem
 
 const Grid = styled.div<{ $column: number }>`
-  display: flex;
   display: grid;
-  margin: 3rem auto;
   grid-template-columns: repeat(${(props) => props.$column}, min-content);
   grid-auto-rows: min-content;
   column-gap: 2rem;

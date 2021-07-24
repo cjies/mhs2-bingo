@@ -1,9 +1,12 @@
+import Image from 'next/image';
 import { FC, memo } from 'react';
 import styled, { css } from 'styled-components';
 
-import { ATTACK_TYPE, ATTACK_TYPE_ICON } from '../constants/attackType';
-import { GENE_COLOR, GENE_EMPTY_COLOR, GENE_TYPE } from '../constants/gene';
-import { GeneId } from '../interfaces/gene';
+import { ATTACK_TYPE, ATTACK_TYPE_ICON } from '@/constants/attackType';
+import { DEFAULT_FONT_SIZE } from '@/constants/fontSize';
+import { GENE_COLOR, GENE_EMPTY_COLOR, GENE_TYPE } from '@/constants/gene';
+import { GeneId } from '@/interfaces/gene';
+
 import EmptyGene from './EmptyGene';
 
 interface GeneContainerProps {
@@ -20,21 +23,6 @@ const GeneContainer = styled(EmptyGene)<GeneContainerProps>`
     css`
       border: 5px solid #000;
     `}
-`;
-
-const Icon = styled.div<{ $size: number }>`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: ${(props) => `${props.$size}rem` || '2rem'};
 `;
 
 interface Props {
@@ -56,6 +44,9 @@ const Gene: FC<Props> = ({
   isAttackTypeMatch,
   onClick,
 }) => {
+  const attackTypeIcon = ATTACK_TYPE_ICON[attackType];
+  const iconSize = (size * DEFAULT_FONT_SIZE) / 1.5; // rem -> px
+
   return (
     <GeneContainer
       $size={size}
@@ -63,7 +54,14 @@ const Gene: FC<Props> = ({
       $type={geneType}
       onClick={onClick}
     >
-      <Icon $size={size / 2}>{ATTACK_TYPE_ICON[attackType]}</Icon>
+      {attackTypeIcon && (
+        <Image
+          src={attackTypeIcon}
+          width={iconSize}
+          height={iconSize}
+          alt="icon"
+        />
+      )}
     </GeneContainer>
   );
 };

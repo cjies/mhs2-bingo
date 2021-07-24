@@ -1,6 +1,7 @@
-import { ATTACK_TYPE } from '../constants/attackType';
-import { GENE_TYPE } from '../constants/gene';
-import { SKILL_TYPE } from '../constants/skillType';
+import { ATTACK_TYPE } from '@/constants/attackType';
+import { GENE_TYPE } from '@/constants/gene';
+import { SKILL_TYPE } from '@/constants/skillType';
+
 import { Maybe, Opaque } from './common';
 
 export type GeneId = Opaque<'GENE_ID', string>;
