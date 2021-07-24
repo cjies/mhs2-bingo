@@ -145,25 +145,27 @@ function HomePage() {
   //   Render
   // -------------------------------------
 
-  const flattenGeneList = useMemo(
+  const geneTableForList = useMemo(
     () =>
-      geneTable.flat().map((gene, index) => {
-        if (!gene) {
-          const fakeGene: Gene = {
-            id: `fake-gene-${index}` as GeneId,
-            type: GENE_TYPE.NORMAL,
-            attackType: ATTACK_TYPE.NONE,
-            name: '--',
-            skillType: SKILL_TYPE.NONE,
-            skillName: '',
-            skillDescription: '',
-            minLevel: 0,
-            sp: 0,
-            monsters: [],
-          };
-          return fakeGene;
-        }
-        return gene;
+      geneTable.map((row) => {
+        return row.map((gene, index) => {
+          if (!gene) {
+            const fakeGene: Gene = {
+              id: `fake-gene-${index}` as GeneId,
+              type: GENE_TYPE.NORMAL,
+              attackType: ATTACK_TYPE.NONE,
+              name: '--',
+              skillType: SKILL_TYPE.NONE,
+              skillName: '',
+              skillDescription: '',
+              minLevel: 0,
+              sp: 0,
+              monsters: [],
+            };
+            return fakeGene;
+          }
+          return gene;
+        });
       }),
     [geneTable]
   );
@@ -175,7 +177,7 @@ function HomePage() {
         .map(({ id }) => id),
     [geneTable]
   );
-  const listGrid = useMemo(
+  const gridParms = useMemo(
     () => ({ gutter: 16, xs: 1, sm: 1, md: 1, lg: 3, xl: 3, xxl: 3 }),
     []
   );
@@ -199,14 +201,28 @@ function HomePage() {
         <Bingo table={geneTable} onGeneClick={setSelectedGene} />
       </BingoContainer>
 
-      <List
-        size="small"
-        dataSource={flattenGeneList}
-        grid={listGrid}
-        renderItem={(gene) => (
-          <GeneListItem key={gene.id} selected gene={gene} />
-        )}
-      />
+      {geneTableForList.map((row, rowIndex) => (
+        <List
+          key={`row-${rowIndex}`}
+          size="small"
+          dataSource={row}
+          grid={gridParms}
+          renderItem={(gene, columnIndex) => {
+            const handleGeneClick = () => {
+              setSelectedGene({ rowIndex, columnIndex, gene });
+            };
+
+            return (
+              <GeneListItem
+                key={gene.id}
+                selected
+                gene={gene}
+                onClick={handleGeneClick}
+              />
+            );
+          }}
+        />
+      ))}
 
       <GeneSelectionModal
         visible={!!selectedGene}

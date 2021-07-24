@@ -1,4 +1,4 @@
-import { Button, List, Modal, Tabs } from 'antd';
+import { Button, Modal, Tabs } from 'antd';
 import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
@@ -8,8 +8,8 @@ import { GENE_TYPE } from '@/constants/gene';
 import { Maybe } from '@/interfaces/common';
 import { Gene as IGene, GeneId } from '@/interfaces/gene';
 
-import GeneListItem from '../GeneListItem';
 import { ALL_TYPE, TABS } from './constants';
+import GeneTabPane from './GeneTabPane';
 
 const StyledModal = styled(Modal)`
   .ant-modal-content {
@@ -43,6 +43,11 @@ const StyledTabs = styled(Tabs)`
       margin-left: 0.5rem;
     }
   }
+`;
+
+const StyledFooterButton = styled(Button)`
+  padding-left: 2rem;
+  padding-right: 2rem;
 `;
 
 interface Props {
@@ -96,8 +101,8 @@ const GeneSelectionModal: FC<Props> = ({
   // -------------------------------------
 
   const handleModalReset = useCallback(() => {
-    setToBeSelectedGene(null);
-  }, []);
+    onApply(null);
+  }, [onApply]);
 
   const handleModalApply = useCallback(() => {
     onApply(toBeSelectedGene);
@@ -109,28 +114,29 @@ const GeneSelectionModal: FC<Props> = ({
 
   const modalFooter = useMemo(
     () => [
-      <Button key="reset" type="ghost" size="large" onClick={handleModalReset}>
+      <StyledFooterButton
+        key="reset"
+        danger
+        type="text"
+        size="large"
+        disabled={!selectedGene}
+        onClick={handleModalReset}
+      >
         重設
-      </Button>,
-      <Button key="cancel" size="large" onClick={onCancel}>
+      </StyledFooterButton>,
+      <StyledFooterButton key="cancel" size="large" onClick={onCancel}>
         取消
-      </Button>,
-      <Button
+      </StyledFooterButton>,
+      <StyledFooterButton
         key="apply"
         type="primary"
         size="large"
         onClick={handleModalApply}
       >
         確定
-      </Button>,
+      </StyledFooterButton>,
     ],
-    [handleModalReset, handleModalApply, onCancel]
-  );
-
-  const listGrid = useMemo(() => ({ gutter: 8, column: 2, xs: 1 }), []);
-  const listPagination = useMemo(
-    () => ({ pageSize: 6, showSizeChanger: false, size: 'small' } as const),
-    []
+    [selectedGene, handleModalReset, handleModalApply, onCancel]
   );
 
   return (
@@ -145,27 +151,13 @@ const GeneSelectionModal: FC<Props> = ({
       <StyledTabs type="card" activeKey={tabKey} onChange={setTabKey}>
         {TABS.map((tab) => (
           <Tabs.TabPane key={tab.key} tab={tab.label}>
-            <List
-              size="small"
-              dataSource={filteredGenes}
-              grid={listGrid}
-              pagination={listPagination}
-              renderItem={(gene) => {
-                const isSelected = toBeSelectedGene?.id === gene.id;
-                const isDisabled =
-                  invalidGeneIds.includes(gene.id) &&
-                  selectedGene?.id !== gene.id;
-
-                return (
-                  <GeneListItem
-                    key={gene.id}
-                    gene={gene}
-                    selected={isSelected}
-                    disabled={isDisabled}
-                    onClick={setToBeSelectedGene}
-                  />
-                );
-              }}
+            <GeneTabPane
+              searchPlaceholder={tab.searchPlaceholder ?? ''}
+              genes={filteredGenes}
+              selectedGene={selectedGene}
+              toBeSelectedGene={toBeSelectedGene}
+              invalidGeneIds={invalidGeneIds}
+              onGeneClick={setToBeSelectedGene}
             />
           </Tabs.TabPane>
         ))}

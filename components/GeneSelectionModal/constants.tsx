@@ -19,7 +19,11 @@ const LabelText = styled.span`
 export const ALL_TYPE = 'ALL';
 
 export const TABS = [
-  { key: ALL_TYPE, label: '全部' },
+  {
+    key: ALL_TYPE,
+    label: '全部',
+    searchPlaceholder: '全部基因',
+  },
   {
     key: GENE_TYPE.NORMAL,
     label: (
@@ -33,6 +37,7 @@ export const TABS = [
         />
       </Label>
     ),
+    searchPlaceholder: '無屬性基因',
   },
   {
     key: GENE_TYPE.FIRE,
@@ -61,6 +66,7 @@ export const TABS = [
         />
       </Label>
     ),
+    searchPlaceholder: '水屬性基因',
   },
   {
     key: GENE_TYPE.THUNDER,
@@ -75,6 +81,7 @@ export const TABS = [
         />
       </Label>
     ),
+    searchPlaceholder: '雷屬性基因',
   },
   {
     key: GENE_TYPE.ICE,
@@ -89,6 +96,7 @@ export const TABS = [
         />
       </Label>
     ),
+    searchPlaceholder: '冰屬性基因',
   },
   {
     key: GENE_TYPE.DRAGON,
@@ -103,6 +111,7 @@ export const TABS = [
         />
       </Label>
     ),
+    searchPlaceholder: '龍屬性基因',
   },
   {
     key: ATTACK_TYPE.POWER,
@@ -117,6 +126,7 @@ export const TABS = [
         />
       </Label>
     ),
+    searchPlaceholder: '力量基因',
   },
   {
     key: ATTACK_TYPE.SPEED,
@@ -131,6 +141,7 @@ export const TABS = [
         />
       </Label>
     ),
+    searchPlaceholder: '速度基因',
   },
   {
     key: ATTACK_TYPE.SKILL,
@@ -145,5 +156,6 @@ export const TABS = [
         />
       </Label>
     ),
+    searchPlaceholder: '技巧基因',
   },
 ];

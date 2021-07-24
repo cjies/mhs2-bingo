@@ -21,11 +21,17 @@ const ListItemMeta = styled(List.Item.Meta)<{ $selected?: boolean }>`
   padding: 0.5rem;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 0.5rem;
+  border: 2px solid transparent;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 0 10px 5px rgba(0, 159, 255, 0.5);
+  }
 
   ${(props) =>
     props.$selected &&
     css`
-      border: 2px solid ${PRIMARY_COLOR};
+      border-color: ${PRIMARY_COLOR};
     `}
 `;
 
