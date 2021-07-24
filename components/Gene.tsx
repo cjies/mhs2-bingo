@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { FC, memo } from 'react';
 import styled, { css } from 'styled-components';
 
-import { ATTACK_TYPE, ATTACK_TYPE_ICON } from '@/constants/attackType';
+import { ATTACK_TYPE, ATTACK_TYPE_LIGHT_ICON } from '@/constants/attackType';
 import { DEFAULT_FONT_SIZE } from '@/constants/common';
 import { GENE_COLOR, GENE_EMPTY_COLOR, GENE_TYPE } from '@/constants/gene';
 
@@ -35,7 +35,7 @@ interface GeneContainerProps {
 }
 
 const GeneContainer = styled(EmptyGene)<GeneContainerProps>`
-  background-color: ${(props) => GENE_COLOR[props.$type] ?? GENE_EMPTY_COLOR};
+  background: ${(props) => GENE_COLOR[props.$type] ?? GENE_EMPTY_COLOR};
 `;
 
 interface Props {
@@ -53,7 +53,7 @@ const Gene: FC<Props> = ({
   attackType,
   onClick,
 }) => {
-  const attackTypeIcon = ATTACK_TYPE_ICON[attackType];
+  const attackTypeIcon = ATTACK_TYPE_LIGHT_ICON[attackType];
   const iconSize = (size * DEFAULT_FONT_SIZE) / 1.5; // rem -> px
 
   return (

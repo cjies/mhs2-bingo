@@ -4,10 +4,10 @@ import styled from 'styled-components';
 import { GENE_BORDER_COLOR } from '@/constants/gene';
 import { GeneTable, SelectedGene } from '@/interfaces/gene';
 import {
-  checkDiagonalGenes,
-  checkHorizontalGenes,
-  checkVerticalGenes,
-} from '@/utils';
+  matchDiagonalGenes,
+  matchHorizontalGenes,
+  matchVerticalGenes,
+} from '@/utils/matchers';
 
 import Gene, { EmptyGene } from '../Gene';
 import { GENE_GAP, GENE_LINE_SIZE, GENE_SIZE } from './constants';
@@ -45,9 +45,9 @@ interface Props {
 }
 
 const Bingo: FC<Props> = ({ table, onGeneClick }) => {
-  const horizontalResult = useMemo(() => checkHorizontalGenes(table), [table]);
-  const verticalResult = useMemo(() => checkVerticalGenes(table), [table]);
-  const diagonalResult = useMemo(() => checkDiagonalGenes(table), [table]);
+  const horizontalResult = useMemo(() => matchHorizontalGenes(table), [table]);
+  const verticalResult = useMemo(() => matchVerticalGenes(table), [table]);
+  const diagonalResult = useMemo(() => matchDiagonalGenes(table), [table]);
 
   return (
     <Grid $column={table.length}>

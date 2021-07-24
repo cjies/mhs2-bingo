@@ -6,6 +6,7 @@ import thunderTypeIcon from '@/public/images/thunder-type.png';
 import waterTypeIcon from '@/public/images/water-type.png';
 
 export enum GENE_TYPE {
+  RAINBOW = 'RAINBOW',
   NORMAL = 'NORMAL',
   FIRE = 'FIRE',
   WATER = 'WATER',
@@ -21,6 +22,8 @@ export const GENE_COLOR = {
   [GENE_TYPE.THUNDER]: '#dbd115',
   [GENE_TYPE.ICE]: '#afcceb',
   [GENE_TYPE.DRAGON]: '#6b73b5',
+  [GENE_TYPE.RAINBOW]:
+    'conic-gradient(red, yellow, lime, aqua, blue, magenta, red)',
 };
 
 export const GENE_EMPTY_COLOR = '#291d0d';

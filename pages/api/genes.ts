@@ -10,6 +10,7 @@ import { SKILL_TYPE } from '@/constants/skillType';
 import { Gene, GeneId } from '@/interfaces/gene';
 
 const CSV_PATH = {
+  [GENE_TYPE.RAINBOW]: 'csv/rainbow.csv',
   [GENE_TYPE.NORMAL]: 'csv/normal.csv',
   [GENE_TYPE.FIRE]: 'csv/fire.csv',
   [GENE_TYPE.WATER]: 'csv/water.csv',
@@ -21,12 +22,14 @@ const CSV_PATH = {
 const SKILL_TYPE_MAP: Record<string, SKILL_TYPE> = {
   主動: SKILL_TYPE.ACTIVE,
   被動: SKILL_TYPE.PASSIVE,
+  無: SKILL_TYPE.NONE,
 };
 
 const ATTACK_TYPE_MAP: Record<string, ATTACK_TYPE> = {
   力量: ATTACK_TYPE.POWER,
   技巧: ATTACK_TYPE.SPEED,
   速度: ATTACK_TYPE.SKILL,
+  彩虹: ATTACK_TYPE.RAINBOW,
   無: ATTACK_TYPE.NONE,
 };
 

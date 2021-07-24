@@ -154,7 +154,7 @@ function HomePage() {
             type: GENE_TYPE.NORMAL,
             attackType: ATTACK_TYPE.NONE,
             name: '--',
-            skillType: SKILL_TYPE.PASSIVE,
+            skillType: SKILL_TYPE.NONE,
             skillName: '',
             skillDescription: '',
             minLevel: 0,

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import styled from 'styled-components';
 
-import { ATTACK_TYPE, ATTACK_TYPE_ICON } from '@/constants/attackType';
+import { ATTACK_TYPE, ATTACK_TYPE_DARK_ICON } from '@/constants/attackType';
 import { GENE_TYPE, GENE_TYPE_ICON } from '@/constants/gene';
 
 const Label = styled.div`
@@ -110,7 +110,7 @@ export const TABS = [
       <Label>
         <LabelText>力量</LabelText>
         <Image
-          src={ATTACK_TYPE_ICON[ATTACK_TYPE.POWER]}
+          src={ATTACK_TYPE_DARK_ICON[ATTACK_TYPE.POWER]}
           width={20}
           height={20}
           alt="力量"
@@ -124,7 +124,7 @@ export const TABS = [
       <Label>
         <LabelText>速度</LabelText>
         <Image
-          src={ATTACK_TYPE_ICON[ATTACK_TYPE.SPEED]}
+          src={ATTACK_TYPE_DARK_ICON[ATTACK_TYPE.SPEED]}
           width={20}
           height={20}
           alt="速度"
@@ -138,7 +138,7 @@ export const TABS = [
       <Label>
         <LabelText>技巧</LabelText>
         <Image
-          src={ATTACK_TYPE_ICON[ATTACK_TYPE.SKILL]}
+          src={ATTACK_TYPE_DARK_ICON[ATTACK_TYPE.SKILL]}
           width={20}
           height={20}
           alt="技巧"
