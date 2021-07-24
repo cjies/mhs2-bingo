@@ -2,12 +2,18 @@
   "extends": [
     "next",
     "next/core-web-vitals",
+    "plugin:import/recommended",
     "prettier"
   ],
   "plugins": [
     "simple-import-sort",
     "prettier"
   ],
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
   "rules": {
     "prettier/prettier": "error",
     "simple-import-sort/imports": "error",
