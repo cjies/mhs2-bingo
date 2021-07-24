@@ -1,11 +1,5 @@
-import { Maybe } from '../interfaces/common';
-import {
-  Gene,
-  GeneId,
-  GeneMatchResult,
-  GeneRow,
-  GeneTable,
-} from '../interfaces/gene';
+import { Maybe } from '@/interfaces/common';
+import { Gene, GeneMatchResult, GeneRow, GeneTable } from '@/interfaces/gene';
 
 /**
  * Check if type or category is matched on each gene
@@ -68,20 +62,5 @@ export const checkDiagonalGenes = (table: GeneTable) => {
     diagonalRight.push(table[i][table.length - i - 1]);
   }
 
-  const idsOnDiagonalAxis = [...diagonalLeft, ...diagonalRight].reduce<
-    GeneId[]
-  >((ids, gene) => {
-    if (gene && !ids.includes(gene.id)) {
-      ids.push(gene.id);
-    }
-
-    return ids;
-  }, []);
-  const matchedResult = checkHorizontalGenes([diagonalLeft, diagonalRight]);
-
-  return {
-    ids: idsOnDiagonalAxis,
-    left: matchedResult[0],
-    right: matchedResult[1],
-  };
+  return checkHorizontalGenes([diagonalLeft, diagonalRight]);
 };

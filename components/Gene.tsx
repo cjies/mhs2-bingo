@@ -3,45 +3,54 @@ import { FC, memo } from 'react';
 import styled, { css } from 'styled-components';
 
 import { ATTACK_TYPE, ATTACK_TYPE_ICON } from '@/constants/attackType';
-import { DEFAULT_FONT_SIZE } from '@/constants/fontSize';
+import { DEFAULT_FONT_SIZE } from '@/constants/common';
 import { GENE_COLOR, GENE_EMPTY_COLOR, GENE_TYPE } from '@/constants/gene';
-import { GeneId } from '@/interfaces/gene';
 
-import EmptyGene from './EmptyGene';
+export const EmptyGene = styled.div<{ $size: number }>`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: ${(props) => `${props.$size}rem` || '5rem'};
+  height: ${(props) => `${props.$size}rem` || '5rem'};
+  border-radius: 50%;
+  background-color: ${GENE_EMPTY_COLOR};
+  transition: box-shadow 0.2s ease;
+
+  ${(props) =>
+    props.onClick
+      ? css`
+          cursor: pointer;
+          &:hover {
+            box-shadow: 0 0 10px 5px rgba(0, 159, 255, 0.8);
+          }
+        `
+      : ''}
+`;
 
 interface GeneContainerProps {
   $size: number; // in rem
-  $isHighlight: boolean;
   $type: GENE_TYPE;
 }
 
 const GeneContainer = styled(EmptyGene)<GeneContainerProps>`
   background-color: ${(props) => GENE_COLOR[props.$type] ?? GENE_EMPTY_COLOR};
-
-  ${(props) =>
-    props.$isHighlight &&
-    css`
-      border: 5px solid #000;
-    `}
 `;
 
 interface Props {
-  id: GeneId;
+  className?: string;
   size: number; // in rem
   geneType: GENE_TYPE;
   attackType: ATTACK_TYPE;
-  isGeneTypeMatch?: boolean;
-  isAttackTypeMatch?: boolean;
   onClick?: () => void;
 }
 
 const Gene: FC<Props> = ({
-  id,
+  className,
   size,
   geneType,
   attackType,
-  isGeneTypeMatch,
-  isAttackTypeMatch,
   onClick,
 }) => {
   const attackTypeIcon = ATTACK_TYPE_ICON[attackType];
@@ -49,8 +58,8 @@ const Gene: FC<Props> = ({
 
   return (
     <GeneContainer
+      className={className}
       $size={size}
-      $isHighlight={!!(isGeneTypeMatch || isAttackTypeMatch)}
       $type={geneType}
       onClick={onClick}
     >

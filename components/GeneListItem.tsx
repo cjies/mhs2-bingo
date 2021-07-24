@@ -2,8 +2,9 @@ import { List } from 'antd';
 import { FC, memo, useCallback } from 'react';
 import styled, { css } from 'styled-components';
 
+import { PRIMARY_COLOR } from '@/constants/common';
 import { Maybe } from '@/interfaces/common';
-import { Gene as IGene, GeneId } from '@/interfaces/gene';
+import { Gene as IGene } from '@/interfaces/gene';
 
 import Gene from './Gene';
 
@@ -24,7 +25,7 @@ const ListItemMeta = styled(List.Item.Meta)<{ $selected?: boolean }>`
   ${(props) =>
     props.$selected &&
     css`
-      border: 2px solid #381a02;
+      border: 2px solid ${PRIMARY_COLOR};
     `}
 `;
 
@@ -45,12 +46,7 @@ const GeneListItem: FC<Props> = ({ gene, selected, disabled, onClick }) => {
       <ListItemMeta
         $selected={selected}
         avatar={
-          <Gene
-            id={gene.id}
-            size={3}
-            geneType={gene.type}
-            attackType={gene.attackType}
-          />
+          <Gene size={3} geneType={gene.type} attackType={gene.attackType} />
         }
         title={gene.name}
         description={

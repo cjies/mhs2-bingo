@@ -1,4 +1,5 @@
 import { List, Spin } from 'antd';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
@@ -32,7 +33,6 @@ const SpinPlaceholder = styled.div`
   height: 100vh;
 `;
 
-const GENE_IDS_QUERY_SEPARATOR = ',';
 const EMPTY_GENE_TABLE: GeneTable = [
   [null, null, null],
   [null, null, null],
@@ -175,7 +175,10 @@ function HomePage() {
         .map(({ id }) => id),
     [geneTable]
   );
-  const listGrid = useMemo(() => ({ gutter: 8, column: 3, xs: 1 }), []);
+  const listGrid = useMemo(
+    () => ({ gutter: 16, xs: 1, sm: 1, md: 1, lg: 3, xl: 3, xxl: 3 }),
+    []
+  );
 
   if (allGenes.length === 0) {
     return (
@@ -187,6 +190,11 @@ function HomePage() {
 
   return (
     <PageContainer>
+      <Head>
+        <title>物語2 羈絆基因賓果模擬器</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+
       <BingoContainer>
         <Bingo table={geneTable} onGeneClick={setSelectedGene} />
       </BingoContainer>

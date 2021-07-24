@@ -23,7 +23,9 @@ export const GENE_COLOR = {
   [GENE_TYPE.DRAGON]: '#6b73b5',
 };
 
-export const GENE_EMPTY_COLOR = '#221402';
+export const GENE_EMPTY_COLOR = '#291d0d';
+export const GENE_BORDER_COLOR = '#483517';
+export const GENE_BORDER_COLOR_MATCH = '#fff';
 
 export const GENE_TYPE_ICON = {
   [GENE_TYPE.NORMAL]: normalTypeIcon,

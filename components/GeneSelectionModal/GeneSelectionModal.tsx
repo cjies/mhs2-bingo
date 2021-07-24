@@ -3,6 +3,7 @@ import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { ATTACK_TYPE } from '@/constants/attackType';
+import { PRIMARY_BACKGROUND_COLOR, PRIMARY_COLOR } from '@/constants/common';
 import { GENE_TYPE } from '@/constants/gene';
 import { Maybe } from '@/interfaces/common';
 import { Gene as IGene, GeneId } from '@/interfaces/gene';
@@ -12,7 +13,7 @@ import { ALL_TYPE, TABS } from './constants';
 
 const StyledModal = styled(Modal)`
   .ant-modal-content {
-    background-color: #c49c5d;
+    background-color: ${PRIMARY_BACKGROUND_COLOR};
   }
 
   .ant-modal-footer {
@@ -26,15 +27,12 @@ const StyledTabs = styled(Tabs)`
   }
 
   .ant-tabs-tab.ant-tabs-tab.ant-tabs-tab {
-    line-height: 1;
     border: 0;
     border-radius: 0.5rem;
-    padding-left: 3rem;
-    padding-right: 3rem;
     background-color: rgba(255, 255, 255, 0.5);
 
     &.ant-tabs-tab-active {
-      background-color: #381a02;
+      background-color: ${PRIMARY_COLOR};
 
       .ant-tabs-tab-btn {
         color: #fff;
