@@ -148,8 +148,9 @@ const GeneSelectionModal: FC<Props> = ({
   return (
     <StyledModal
       visible={visible}
-      width="80%"
+      width={1024}
       closable={false}
+      destroyOnClose
       footer={modalFooter}
       onOk={handleModalApply}
       onCancel={onCancel}
