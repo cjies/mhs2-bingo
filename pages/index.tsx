@@ -322,7 +322,7 @@ function HomePage() {
           </Link>
         </Text>
         <Text>
-          Data sources are powered by{' '}
+          Gene data sources are powered by{' '}
           <Link
             underline
             href="https://forum.gamer.com.tw/C.php?bsn=5786&snA=162812"
@@ -331,7 +331,6 @@ function HomePage() {
             夕日飛回(sdu60622)
           </Link>
         </Text>
-        <Text>🙏 請到巴哈支持原作者！🙏</Text>
       </Footer>
     </PageContainer>
   );
