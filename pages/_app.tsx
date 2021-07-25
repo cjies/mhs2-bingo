@@ -57,8 +57,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <link rel="icon" href="/favicon.ico" type="image/x-icon"></link>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1"
+        />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 
         {/* Global site tag (gtag.js) - Google Analytics */}
         <GoogleAnalytics />
