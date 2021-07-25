@@ -322,7 +322,7 @@ function HomePage() {
           </Link>
         </Text>
         <Text>
-          Gene data sources are powered by{' '}
+          Genes data are powered by{' '}
           <Link
             underline
             href="https://forum.gamer.com.tw/C.php?bsn=5786&snA=162812"
