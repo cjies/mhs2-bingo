@@ -1,4 +1,4 @@
-import { List, Spin } from 'antd';
+import { List, Space, Spin, Typography } from 'antd';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -17,6 +17,8 @@ import {
   encodeGeneIdsToQuery,
 } from '@/utils/geneQuery';
 
+const { Text, Link } = Typography;
+
 const PageContainer = styled.div`
   width: 90%;
   margin: 0 auto;
@@ -31,6 +33,11 @@ const BingoContainer = styled.div`
 const SpinPlaceholder = styled.div`
   width: 100%;
   height: 100vh;
+`;
+
+const Footer = styled(Space)`
+  width: 100%;
+  padding: 3rem 0;
 `;
 
 const EMPTY_GENE_TABLE: GeneTable = [
@@ -232,6 +239,42 @@ function HomePage() {
         onApply={handleModalApply}
         onCancel={handleModalCancel}
       />
+
+      <Footer direction="vertical" align="center">
+        <Text>
+          {'MIT license: '}
+          <Link
+            underline
+            type="secondary"
+            href="https://github.com/cjies/mhs2-bingo"
+            target="_blank"
+          >
+            source code
+          </Link>
+          {' | 👉 '}
+          <Link
+            underline
+            type="secondary"
+            href="https://github.com/cjies/mhs2-bingo/issues"
+            target="_blank"
+          >
+            回報問題
+          </Link>
+          {' 👈'}
+        </Text>
+        <Text>
+          Data sources are powered by{' '}
+          <Link
+            underline
+            type="secondary"
+            href="https://forum.gamer.com.tw/C.php?bsn=5786&snA=162812"
+            target="_blank"
+          >
+            夕日飛回(sdu60622)
+          </Link>
+        </Text>
+        <Text>🙏 請到巴哈支持原作者！🙏</Text>
+      </Footer>
     </PageContainer>
   );
 }
