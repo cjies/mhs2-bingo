@@ -34,6 +34,7 @@ const BingoContainer = styled.div`
 const SpinPlaceholder = styled.div`
   width: 100%;
   height: 100vh;
+  min-height: 300px;
 `;
 
 const Footer = styled(Space)`
