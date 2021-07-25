@@ -6,7 +6,8 @@ import { PRIMARY_COLOR } from '@/constants/common';
 import { Maybe } from '@/interfaces/common';
 import { Gene as IGene } from '@/interfaces/gene';
 
-import Gene from './Gene';
+import Gene from '../Gene';
+import GeneItemDescriptions from './GeneItemDescriptions';
 
 const ListItem = styled(List.Item)<{ $disabled?: boolean }>`
   ${(props) =>
@@ -18,7 +19,7 @@ const ListItem = styled(List.Item)<{ $disabled?: boolean }>`
 `;
 
 const ListItemMeta = styled(List.Item.Meta)<{ $selected?: boolean }>`
-  padding: 0.5rem;
+  padding: 0.5rem 1rem 0.5rem 0.5rem;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 0.5rem;
   border: 2px solid transparent;
@@ -55,15 +56,7 @@ const GeneListItem: FC<Props> = ({ gene, selected, disabled, onClick }) => {
           <Gene size={3} geneType={gene.type} attackType={gene.attackType} />
         }
         title={gene.name}
-        description={
-          <div>
-            <div>{`${gene.skillType}: ${gene.skillName}`}</div>
-            <div>{gene.skillDescription}</div>
-            <div>{`必要等級: ${gene.minLevel}`}</div>
-            <div>{`消耗羈絆值: ${gene.sp ? `${gene.sp} / 100` : '--'}`}</div>
-            <div>{`可持有隨行獸: ${gene.monsters.join(', ')}`}</div>
-          </div>
-        }
+        description={<GeneItemDescriptions gene={gene} />}
       />
     </ListItem>
   );

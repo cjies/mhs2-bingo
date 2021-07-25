@@ -184,7 +184,8 @@ function HomePage() {
         .map(({ id }) => id),
     [geneTable]
   );
-  const gridParms = useMemo(
+  const listStyleParams = useMemo(() => ({ marginBottom: '2rem' }), []);
+  const gridParams = useMemo(
     () => ({ gutter: 16, xs: 1, sm: 1, md: 1, lg: 3, xl: 3, xxl: 3 }),
     []
   );
@@ -211,9 +212,9 @@ function HomePage() {
       {geneTableForList.map((row, rowIndex) => (
         <List
           key={`row-${rowIndex}`}
-          size="small"
           dataSource={row}
-          grid={gridParms}
+          grid={gridParams}
+          style={listStyleParams}
           renderItem={(gene, columnIndex) => {
             const handleGeneClick = () => {
               setSelectedGene({ rowIndex, columnIndex, gene });
