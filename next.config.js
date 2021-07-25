@@ -27,6 +27,7 @@ module.exports = withLess({
       modifyVars: {
         'primary-color': '#381a02',
         'border-radius-base': '0.5rem',
+        'font-size-base': '16px',
       },
     },
   },
