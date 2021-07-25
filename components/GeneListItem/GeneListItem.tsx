@@ -1,5 +1,5 @@
 import { List } from 'antd';
-import { FC, memo, useCallback } from 'react';
+import { FC, memo, MouseEventHandler, useCallback } from 'react';
 import styled, { css } from 'styled-components';
 
 import { PRIMARY_COLOR } from '@/constants/common';
@@ -25,7 +25,10 @@ const ListItem = styled(List.Item)<{ $disabled?: boolean }>`
     `}
 `;
 
-const ListItemMeta = styled(List.Item.Meta)<{ $selected?: boolean }>`
+const ListItemMeta = styled(List.Item.Meta)<{
+  $selected?: boolean;
+  $hovered?: boolean;
+}>`
   padding: 0.5rem 1rem 0.5rem 0.5rem;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 0.5rem;
@@ -33,8 +36,14 @@ const ListItemMeta = styled(List.Item.Meta)<{ $selected?: boolean }>`
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
 
   &:hover {
-    box-shadow: 0 0 10px 5px rgba(0, 159, 255, 0.5);
+    box-shadow: 0 0 10px 5px rgba(0, 159, 255, 0.8);
   }
+
+  ${(props) =>
+    props.$hovered &&
+    css`
+      box-shadow: 0 0 10px 5px rgba(0, 159, 255, 0.8);
+    `}
 
   ${(props) =>
     props.$selected &&
@@ -47,18 +56,35 @@ interface Props {
   gene: IGene;
   selected?: boolean;
   disabled?: boolean;
+  hovered?: boolean;
   onClick?: (gene: Maybe<IGene>) => void;
+  onMouseEnter?: MouseEventHandler<HTMLDivElement>;
+  onMouseLeave?: MouseEventHandler<HTMLDivElement>;
 }
 
-const GeneListItem: FC<Props> = ({ gene, selected, disabled, onClick }) => {
+const GeneListItem: FC<Props> = ({
+  gene,
+  selected,
+  disabled,
+  hovered,
+  onClick,
+  onMouseEnter,
+  onMouseLeave,
+}) => {
   const handleItemClick = useCallback(() => {
     onClick?.(selected ? null : gene);
   }, [selected, gene, onClick]);
 
   return (
-    <ListItem $disabled={disabled} onClick={handleItemClick}>
+    <ListItem
+      $disabled={disabled}
+      onClick={handleItemClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
       <ListItemMeta
         $selected={selected}
+        $hovered={hovered}
         avatar={
           <Gene size={3} geneType={gene.type} attackType={gene.attackType} />
         }

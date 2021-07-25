@@ -1,12 +1,12 @@
 import Image from 'next/image';
-import { FC, memo } from 'react';
+import { FC, memo, MouseEventHandler } from 'react';
 import styled, { css } from 'styled-components';
 
 import { ATTACK_TYPE, ATTACK_TYPE_LIGHT_ICON } from '@/constants/attackType';
 import { DEFAULT_FONT_SIZE } from '@/constants/common';
 import { GENE_COLOR, GENE_EMPTY_COLOR, GENE_TYPE } from '@/constants/gene';
 
-export const EmptyGene = styled.div<{ $size: number }>`
+export const EmptyGene = styled.div<{ $size: number; $hovered?: boolean }>`
   position: relative;
   display: flex;
   align-items: center;
@@ -22,9 +22,15 @@ export const EmptyGene = styled.div<{ $size: number }>`
     props.onClick
       ? css`
           cursor: pointer;
+
           &:hover {
             box-shadow: 0 0 10px 5px rgba(0, 159, 255, 0.8);
           }
+
+          ${props.$hovered &&
+          css`
+            box-shadow: 0 0 10px 5px rgba(0, 159, 255, 0.5);
+          `}
         `
       : ''}
 `;
@@ -43,7 +49,10 @@ interface Props {
   size: number; // in rem
   geneType: GENE_TYPE;
   attackType: ATTACK_TYPE;
+  hovered?: boolean;
   onClick?: () => void;
+  onMouseEnter?: MouseEventHandler<HTMLDivElement>;
+  onMouseLeave?: MouseEventHandler<HTMLDivElement>;
 }
 
 const Gene: FC<Props> = ({
@@ -51,7 +60,10 @@ const Gene: FC<Props> = ({
   size,
   geneType,
   attackType,
+  hovered,
   onClick,
+  onMouseEnter,
+  onMouseLeave,
 }) => {
   const attackTypeIcon = ATTACK_TYPE_LIGHT_ICON[attackType];
   const iconSize = (size * DEFAULT_FONT_SIZE) / 1.5; // rem -> px
@@ -61,7 +73,10 @@ const Gene: FC<Props> = ({
       className={className}
       $size={size}
       $type={geneType}
+      $hovered={hovered}
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       {attackTypeIcon && (
         <Image

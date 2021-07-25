@@ -52,6 +52,7 @@ function HomePage() {
   const [allGenes, setAllGenes] = useState<Gene[]>([]);
   const [geneTable, setGeneTable] = useState(EMPTY_GENE_TABLE);
   const [selectedGene, setSelectedGene] = useState<SelectedGene | null>(null);
+  const [hoveredGene, setHoveredGene] = useState<SelectedGene | null>(null);
 
   useEffect(() => {
     const fetchGenesAndUpdateGeneTable = async () => {
@@ -207,7 +208,12 @@ function HomePage() {
       </Head>
 
       <BingoContainer>
-        <Bingo table={geneTable} onGeneClick={setSelectedGene} />
+        <Bingo
+          table={geneTable}
+          hoveredGene={hoveredGene}
+          onGeneClick={setSelectedGene}
+          onGeneHover={setHoveredGene}
+        />
       </BingoContainer>
 
       {geneTableForList.map((row, rowIndex) => (
@@ -217,16 +223,29 @@ function HomePage() {
           grid={gridParams}
           style={listStyleParams}
           renderItem={(gene, columnIndex) => {
+            const isHovered =
+              hoveredGene?.rowIndex === rowIndex &&
+              hoveredGene?.columnIndex === columnIndex;
+
             const handleGeneClick = () => {
               setSelectedGene({ rowIndex, columnIndex, gene });
+            };
+            const handleMouseEnter = () => {
+              setHoveredGene({ rowIndex, columnIndex, gene });
+            };
+            const handleMouseLeave = () => {
+              setHoveredGene(null);
             };
 
             return (
               <GeneListItem
                 key={gene.id}
-                selected
                 gene={gene}
+                selected
+                hovered={isHovered}
                 onClick={handleGeneClick}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
               />
             );
           }}

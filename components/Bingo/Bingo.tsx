@@ -2,6 +2,7 @@ import React, { FC, memo, useMemo } from 'react';
 import styled from 'styled-components';
 
 import { GENE_BORDER_COLOR } from '@/constants/gene';
+import { Maybe } from '@/interfaces/common';
 import { GeneTable, SelectedGene } from '@/interfaces/gene';
 import {
   matchDiagonalGenes,
@@ -41,10 +42,12 @@ const StyledGene = styled(Gene)<{ $isMatch?: boolean }>`
 
 interface Props {
   table: GeneTable;
+  hoveredGene: Maybe<SelectedGene>;
   onGeneClick: (selectedGene: SelectedGene) => void;
+  onGeneHover: (selectedGene: Maybe<SelectedGene>) => void;
 }
 
-const Bingo: FC<Props> = ({ table, onGeneClick }) => {
+const Bingo: FC<Props> = ({ table, hoveredGene, onGeneClick, onGeneHover }) => {
   const horizontalResult = useMemo(() => matchHorizontalGenes(table), [table]);
   const verticalResult = useMemo(() => matchVerticalGenes(table), [table]);
   const diagonalResult = useMemo(() => matchDiagonalGenes(table), [table]);
@@ -96,9 +99,18 @@ const Bingo: FC<Props> = ({ table, onGeneClick }) => {
       {table.map((row, rowIndex) => {
         return row.map((gene, columnIndex) => {
           const geneKey = `gene.${gene?.id ?? `${rowIndex}.${columnIndex}`}`;
+          const isHovered =
+            hoveredGene?.rowIndex === rowIndex &&
+            hoveredGene?.columnIndex === columnIndex;
 
           const handleGeneClick = () => {
             onGeneClick({ rowIndex, columnIndex, gene });
+          };
+          const handleMouseEnter = () => {
+            onGeneHover({ rowIndex, columnIndex, gene });
+          };
+          const handleMouseLeave = () => {
+            onGeneHover(null);
           };
 
           if (!gene) {
@@ -106,7 +118,10 @@ const Bingo: FC<Props> = ({ table, onGeneClick }) => {
               <StyledEmptyGene
                 key={geneKey}
                 $size={GENE_SIZE}
+                $hovered={isHovered}
                 onClick={handleGeneClick}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
               />
             );
           }
@@ -117,7 +132,10 @@ const Bingo: FC<Props> = ({ table, onGeneClick }) => {
               size={GENE_SIZE}
               geneType={gene.type}
               attackType={gene.attackType}
+              hovered={isHovered}
               onClick={handleGeneClick}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
             />
           );
         });
