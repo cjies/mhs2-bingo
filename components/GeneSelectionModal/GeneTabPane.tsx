@@ -1,4 +1,4 @@
-import { Input, List } from 'antd';
+import { Grid, Input, List } from 'antd';
 import { FC, memo, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
@@ -30,6 +30,7 @@ const GeneTabPane: FC<Props> = ({
   invalidGeneIds,
   onGeneClick,
 }) => {
+  const screens = Grid.useBreakpoint();
   const [searchQuery, setSearchQuery] = useState('');
 
   // Filter genes by search query
@@ -47,10 +48,10 @@ const GeneTabPane: FC<Props> = ({
   }, [genes, searchQuery]);
 
   const gridParms = useMemo(() => ({ gutter: 8, column: 2, xs: 1 }), []);
-  const paginationParams = useMemo(
-    () => ({ pageSize: 6, showSizeChanger: false, size: 'small' } as const),
-    []
-  );
+  const paginationParams = useMemo(() => {
+    const pageSize = screens.xs ? 4 : 6;
+    return { pageSize, showSizeChanger: false, size: 'small' } as const;
+  }, [screens.xs]);
 
   return (
     <>
