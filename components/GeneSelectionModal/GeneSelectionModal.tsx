@@ -45,11 +45,6 @@ const StyledTabs = styled(Tabs)`
   }
 `;
 
-const StyledFooterButton = styled(Button)`
-  padding-left: 2rem;
-  padding-right: 2rem;
-`;
-
 interface Props {
   visible: boolean;
   genes: IGene[];
@@ -114,23 +109,23 @@ const GeneSelectionModal: FC<Props> = ({
 
   const modalFooter = useMemo(() => {
     const buttons = [
-      <StyledFooterButton key="cancel" size="large" onClick={onCancel}>
+      <Button key="cancel" size="large" onClick={onCancel}>
         取消
-      </StyledFooterButton>,
-      <StyledFooterButton
+      </Button>,
+      <Button
         key="apply"
         type="primary"
         size="large"
         onClick={handleModalApply}
       >
         確定
-      </StyledFooterButton>,
+      </Button>,
     ];
 
     // append reset button
     if (selectedGene) {
       buttons.unshift(
-        <StyledFooterButton
+        <Button
           key="reset"
           danger
           type="primary"
@@ -138,7 +133,7 @@ const GeneSelectionModal: FC<Props> = ({
           onClick={handleModalReset}
         >
           重設此基因
-        </StyledFooterButton>
+        </Button>
       );
     }
 
