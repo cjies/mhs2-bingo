@@ -76,8 +76,6 @@ const Bingo: FC<Props> = ({ table, hoveredGene, onGeneClick, onGeneHover }) => {
     };
   }, [screens.xs]);
 
-  console.log(sizes);
-
   const horizontalResult = useMemo(() => matchHorizontalGenes(table), [table]);
   const verticalResult = useMemo(() => matchVerticalGenes(table), [table]);
   const diagonalResult = useMemo(() => matchDiagonalGenes(table), [table]);

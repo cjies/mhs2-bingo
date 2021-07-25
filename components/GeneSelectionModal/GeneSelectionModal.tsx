@@ -112,18 +112,8 @@ const GeneSelectionModal: FC<Props> = ({
   //   Render
   // -------------------------------------
 
-  const modalFooter = useMemo(
-    () => [
-      <StyledFooterButton
-        key="reset"
-        danger
-        type="text"
-        size="large"
-        disabled={!selectedGene}
-        onClick={handleModalReset}
-      >
-        重設
-      </StyledFooterButton>,
+  const modalFooter = useMemo(() => {
+    const buttons = [
       <StyledFooterButton key="cancel" size="large" onClick={onCancel}>
         取消
       </StyledFooterButton>,
@@ -135,9 +125,25 @@ const GeneSelectionModal: FC<Props> = ({
       >
         確定
       </StyledFooterButton>,
-    ],
-    [selectedGene, handleModalReset, handleModalApply, onCancel]
-  );
+    ];
+
+    // append reset button
+    if (selectedGene) {
+      buttons.unshift(
+        <StyledFooterButton
+          key="reset"
+          danger
+          type="primary"
+          size="large"
+          onClick={handleModalReset}
+        >
+          重設此基因
+        </StyledFooterButton>
+      );
+    }
+
+    return buttons;
+  }, [selectedGene, handleModalReset, handleModalApply, onCancel]);
 
   return (
     <StyledModal

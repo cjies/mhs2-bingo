@@ -1,11 +1,12 @@
-import { GithubOutlined } from '@ant-design/icons';
-import { List, Space, Spin, Typography } from 'antd';
+import { GithubOutlined, SyncOutlined, TableOutlined } from '@ant-design/icons';
+import { Button, List, Space, Spin, Typography } from 'antd';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import Bingo from '@/components/Bingo';
+import BingoTableDrawer from '@/components/BingoTableDrawer';
 import GeneListItem from '@/components/GeneListItem';
 import GeneSelectionModal from '@/components/GeneSelectionModal';
 import { ATTACK_TYPE } from '@/constants/attackType';
@@ -28,7 +29,13 @@ const PageContainer = styled.div`
 const BingoContainer = styled.div`
   display: flex;
   justify-content: center;
-  padding: 5rem;
+  padding: 4rem;
+`;
+
+const ActionButtonsContainer = styled(Space)`
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0 2rem;
 `;
 
 const SpinPlaceholder = styled.div`
@@ -54,6 +61,7 @@ function HomePage() {
   const [geneTable, setGeneTable] = useState(EMPTY_GENE_TABLE);
   const [selectedGene, setSelectedGene] = useState<SelectedGene | null>(null);
   const [hoveredGene, setHoveredGene] = useState<SelectedGene | null>(null);
+  const [isBingoDrawerOpen, setIsBingoDrawerOpen] = useState(false);
 
   useEffect(() => {
     const fetchGenesAndUpdateGeneTable = async () => {
@@ -151,6 +159,25 @@ function HomePage() {
     setSelectedGene(null);
   }, []);
 
+  const handleBingoDrawerOpen = useCallback(() => {
+    setIsBingoDrawerOpen(true);
+  }, []);
+
+  const handleBingoDrawerClose = useCallback(() => {
+    setIsBingoDrawerOpen(false);
+  }, []);
+
+  const handleGeneTableReset = useCallback(() => {
+    const newGeneTable = [
+      [null, null, null],
+      [null, null, null],
+      [null, null, null],
+    ];
+
+    handlePageRefreshWithGeneIds(newGeneTable);
+    setGeneTable(newGeneTable);
+  }, [handlePageRefreshWithGeneIds]);
+
   // -------------------------------------
   //   Render
   // -------------------------------------
@@ -217,6 +244,17 @@ function HomePage() {
         />
       </BingoContainer>
 
+      <ActionButtonsContainer align="center">
+        <Button onClick={handleBingoDrawerOpen}>
+          <TableOutlined />
+          賓果加成清單
+        </Button>
+        <Button type="primary" onClick={handleGeneTableReset}>
+          <SyncOutlined />
+          重設
+        </Button>
+      </ActionButtonsContainer>
+
       {geneTableForList.map((row, rowIndex) => (
         <List
           key={`row-${rowIndex}`}
@@ -252,6 +290,12 @@ function HomePage() {
           }}
         />
       ))}
+
+      <BingoTableDrawer
+        visible={isBingoDrawerOpen}
+        geneTable={geneTable}
+        onClose={handleBingoDrawerClose}
+      />
 
       <GeneSelectionModal
         visible={!!selectedGene}
