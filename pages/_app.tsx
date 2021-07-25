@@ -2,6 +2,8 @@ import 'antd/dist/antd.less';
 
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { createGlobalStyle } from 'styled-components';
 
 import GoogleAnalytics from '@/components/GoogleAnalytics';
@@ -9,6 +11,7 @@ import {
   DEFAULT_FONT_SIZE,
   PRIMARY_BACKGROUND_COLOR,
 } from '@/constants/common';
+import { gaPageView } from '@/utils/googleAnalytics';
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -37,6 +40,20 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+
+  // Send GA page-view event when route changes
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      gaPageView(url);
+    };
+
+    router.events.on('routeChangeComplete', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [router.events]);
+
   return (
     <>
       <Head>
