@@ -11,6 +11,7 @@ export const EmptyGene = styled.div<{ $size: number; $hovered?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
+  user-select: none;
 
   width: ${(props) => `${props.$size}rem` || '5rem'};
   height: ${(props) => `${props.$size}rem` || '5rem'};
