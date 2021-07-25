@@ -174,9 +174,9 @@ function HomePage() {
       [null, null, null],
     ];
 
-    handlePageRefreshWithGeneIds(newGeneTable);
+    router.push('/', undefined, { shallow: true });
     setGeneTable(newGeneTable);
-  }, [handlePageRefreshWithGeneIds]);
+  }, [router]);
 
   // -------------------------------------
   //   Render
