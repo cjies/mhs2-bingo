@@ -24,14 +24,16 @@ export const EmptyGene = styled.div<{ $size: number; $hovered?: boolean }>`
       ? css`
           cursor: pointer;
 
-          &:hover {
-            box-shadow: 0 0 10px 5px rgba(0, 159, 255, 0.8);
-          }
+          @media (hover: hover) and (pointer: fine) {
+            &:hover {
+              box-shadow: 0 0 10px 5px rgba(0, 159, 255, 0.8);
+            }
 
-          ${props.$hovered &&
-          css`
-            box-shadow: 0 0 10px 5px rgba(0, 159, 255, 0.5);
-          `}
+            ${props.$hovered &&
+            css`
+              box-shadow: 0 0 10px 5px rgba(0, 159, 255, 0.5);
+            `}
+          }
         `
       : ''}
 `;

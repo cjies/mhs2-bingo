@@ -35,15 +35,17 @@ const ListItemMeta = styled(List.Item.Meta)<{
   border: 2px solid transparent;
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
 
-  &:hover {
-    box-shadow: 0 0 10px 5px rgba(0, 159, 255, 0.8);
-  }
-
-  ${(props) =>
-    props.$hovered &&
-    css`
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
       box-shadow: 0 0 10px 5px rgba(0, 159, 255, 0.8);
-    `}
+    }
+
+    ${(props) =>
+      props.$hovered &&
+      css`
+        box-shadow: 0 0 10px 5px rgba(0, 159, 255, 0.8);
+      `}
+  }
 
   ${(props) =>
     props.$selected &&
