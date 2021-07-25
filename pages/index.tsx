@@ -1,3 +1,4 @@
+import { GithubOutlined } from '@ant-design/icons';
 import { List, Space, Spin, Typography } from 'antd';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -243,31 +244,23 @@ function HomePage() {
 
       <Footer direction="vertical" align="center">
         <Text>
-          {'MIT license: '}
-          <Link
-            underline
-            type="secondary"
-            href="https://github.com/cjies/mhs2-bingo"
-            target="_blank"
-          >
-            source code
+          {'MIT License : '}
+          <Link href="https://github.com/cjies/mhs2-bingo" target="_blank">
+            <GithubOutlined />
           </Link>
-          {' | 👉 '}
+          {' | '}
           <Link
             underline
-            type="secondary"
             href="https://github.com/cjies/mhs2-bingo/issues"
             target="_blank"
           >
             回報問題
           </Link>
-          {' 👈'}
         </Text>
         <Text>
           Data sources are powered by{' '}
           <Link
             underline
-            type="secondary"
             href="https://forum.gamer.com.tw/C.php?bsn=5786&snA=162812"
             target="_blank"
           >

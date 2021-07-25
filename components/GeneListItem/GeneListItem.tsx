@@ -11,6 +11,13 @@ import GeneItemDescriptions from './GeneItemDescriptions';
 
 const ListItem = styled(List.Item)<{ $disabled?: boolean }>`
   ${(props) =>
+    props.onClick
+      ? css`
+          cursor: pointer;
+        `
+      : ''}
+
+  ${(props) =>
     props.$disabled &&
     css`
       opacity: 0.6;
