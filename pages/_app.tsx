@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { createGlobalStyle } from 'styled-components';
 
+import GoogleAnalytics from '@/components/GoogleAnalytics';
 import {
   DEFAULT_FONT_SIZE,
   PRIMARY_BACKGROUND_COLOR,
@@ -41,6 +42,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <link rel="icon" href="/favicon.ico" type="image/x-icon"></link>
+
+        {/* Global site tag (gtag.js) - Google Analytics */}
+        <GoogleAnalytics />
       </Head>
 
       <GlobalStyle />
