@@ -1,4 +1,5 @@
-import React, { FC, memo, useMemo } from 'react';
+import { Grid } from 'antd';
+import { FC, memo, useMemo } from 'react';
 import styled from 'styled-components';
 
 import { GENE_BORDER_COLOR } from '@/constants/gene';
@@ -11,7 +12,14 @@ import {
 } from '@/utils/matchers';
 
 import Gene, { EmptyGene } from '../Gene';
-import { GENE_GAP, GENE_LINE_SIZE, GENE_SIZE } from './constants';
+import {
+  GENE_GAP,
+  GENE_GAP_XS,
+  GENE_LINE_SIZE,
+  GENE_LINE_SIZE_XS,
+  GENE_SIZE,
+  GENE_SIZE_XS,
+} from './constants';
 import {
   BingoDiagonalLine1,
   BingoDiagonalLine2,
@@ -23,21 +31,21 @@ import {
   BingoVerticalLine3,
 } from './lines';
 
-const Grid = styled.div<{ $column: number }>`
+const BingoGrid = styled.div<{ $column: number; $gapSize: number }>`
   position: relative;
   display: grid;
   grid-template-columns: repeat(${(props) => props.$column}, min-content);
   grid-auto-rows: min-content;
-  column-gap: ${GENE_GAP}rem;
-  row-gap: ${GENE_GAP}em;
+  column-gap: ${(props) => props.$gapSize}rem;
+  row-gap: ${(props) => props.$gapSize}em;
 `;
 
-const StyledEmptyGene = styled(EmptyGene)`
-  border: ${GENE_LINE_SIZE / 2}rem solid ${GENE_BORDER_COLOR};
+const StyledEmptyGene = styled(EmptyGene)<{ $borderSize: number }>`
+  border: ${(props) => `${props.$borderSize}rem solid ${GENE_BORDER_COLOR}`};
 `;
 
-const StyledGene = styled(Gene)<{ $isMatch?: boolean }>`
-  border: ${GENE_LINE_SIZE / 2}rem solid ${GENE_BORDER_COLOR};
+const StyledGene = styled(Gene)<{ $borderSize: number }>`
+  border: ${(props) => `${props.$borderSize}rem solid ${GENE_BORDER_COLOR}`};
 `;
 
 interface Props {
@@ -48,52 +56,90 @@ interface Props {
 }
 
 const Bingo: FC<Props> = ({ table, hoveredGene, onGeneClick, onGeneHover }) => {
+  const screens = Grid.useBreakpoint();
+
+  const sizes = useMemo(() => {
+    if (screens.xs) {
+      return {
+        geneSize: GENE_SIZE_XS,
+        lineSize: GENE_LINE_SIZE_XS,
+        borderSize: GENE_LINE_SIZE_XS / 2,
+        gapSize: GENE_GAP_XS,
+      };
+    }
+
+    return {
+      geneSize: GENE_SIZE,
+      lineSize: GENE_LINE_SIZE,
+      borderSize: GENE_LINE_SIZE / 2,
+      gapSize: GENE_GAP,
+    };
+  }, [screens.xs]);
+
+  console.log(sizes);
+
   const horizontalResult = useMemo(() => matchHorizontalGenes(table), [table]);
   const verticalResult = useMemo(() => matchVerticalGenes(table), [table]);
   const diagonalResult = useMemo(() => matchDiagonalGenes(table), [table]);
 
   return (
-    <Grid $column={table.length}>
+    <BingoGrid $column={table.length} $gapSize={sizes.gapSize}>
       {/* Lines */}
       <BingoHorizontalLine1
-        $isMatch={
-          !!(horizontalResult[0].geneType || horizontalResult[0].attackType)
-        }
+        geneSize={sizes.geneSize}
+        lineSize={sizes.lineSize}
+        gapSize={sizes.gapSize}
+        matchedGeneType={horizontalResult[0].geneType}
+        matchedAttackType={horizontalResult[0].attackType}
       />
       <BingoHorizontalLine2
-        $isMatch={
-          !!(horizontalResult[1].geneType || horizontalResult[1].attackType)
-        }
+        geneSize={sizes.geneSize}
+        lineSize={sizes.lineSize}
+        gapSize={sizes.gapSize}
+        matchedGeneType={horizontalResult[1].geneType}
+        matchedAttackType={horizontalResult[1].attackType}
       />
       <BingoHorizontalLine3
-        $isMatch={
-          !!(horizontalResult[2].geneType || horizontalResult[2].attackType)
-        }
+        geneSize={sizes.geneSize}
+        lineSize={sizes.lineSize}
+        gapSize={sizes.gapSize}
+        matchedGeneType={horizontalResult[2].geneType}
+        matchedAttackType={horizontalResult[2].attackType}
       />
       <BingoVerticalLine1
-        $isMatch={
-          !!(verticalResult[0].geneType || verticalResult[0].attackType)
-        }
+        geneSize={sizes.geneSize}
+        lineSize={sizes.lineSize}
+        gapSize={sizes.gapSize}
+        matchedGeneType={verticalResult[0].geneType}
+        matchedAttackType={verticalResult[0].attackType}
       />
       <BingoVerticalLine2
-        $isMatch={
-          !!(verticalResult[1].geneType || verticalResult[1].attackType)
-        }
+        geneSize={sizes.geneSize}
+        lineSize={sizes.lineSize}
+        gapSize={sizes.gapSize}
+        matchedGeneType={verticalResult[1].geneType}
+        matchedAttackType={verticalResult[1].attackType}
       />
       <BingoVerticalLine3
-        $isMatch={
-          !!(verticalResult[2].geneType || verticalResult[2].attackType)
-        }
+        geneSize={sizes.geneSize}
+        lineSize={sizes.lineSize}
+        gapSize={sizes.gapSize}
+        matchedGeneType={verticalResult[2].geneType}
+        matchedAttackType={verticalResult[2].attackType}
       />
       <BingoDiagonalLine1
-        $isMatch={
-          !!(diagonalResult[0].geneType || diagonalResult[0].attackType)
-        }
+        geneSize={sizes.geneSize}
+        lineSize={sizes.lineSize}
+        gapSize={sizes.gapSize}
+        matchedGeneType={diagonalResult[0].geneType}
+        matchedAttackType={diagonalResult[0].attackType}
       />
       <BingoDiagonalLine2
-        $isMatch={
-          !!(diagonalResult[1].geneType || diagonalResult[1].attackType)
-        }
+        geneSize={sizes.geneSize}
+        lineSize={sizes.lineSize}
+        gapSize={sizes.gapSize}
+        matchedGeneType={diagonalResult[1].geneType}
+        matchedAttackType={diagonalResult[1].attackType}
       />
 
       {table.map((row, rowIndex) => {
@@ -117,7 +163,8 @@ const Bingo: FC<Props> = ({ table, hoveredGene, onGeneClick, onGeneHover }) => {
             return (
               <StyledEmptyGene
                 key={geneKey}
-                $size={GENE_SIZE}
+                $borderSize={sizes.borderSize}
+                $size={sizes.geneSize}
                 $hovered={isHovered}
                 onClick={handleGeneClick}
                 onMouseEnter={handleMouseEnter}
@@ -129,7 +176,8 @@ const Bingo: FC<Props> = ({ table, hoveredGene, onGeneClick, onGeneHover }) => {
           return (
             <StyledGene
               key={geneKey}
-              size={GENE_SIZE}
+              $borderSize={sizes.borderSize}
+              size={sizes.geneSize}
               geneType={gene.type}
               attackType={gene.attackType}
               hovered={isHovered}
@@ -140,7 +188,7 @@ const Bingo: FC<Props> = ({ table, hoveredGene, onGeneClick, onGeneHover }) => {
           );
         });
       })}
-    </Grid>
+    </BingoGrid>
   );
 };
 

@@ -28,7 +28,7 @@ const PageContainer = styled.div`
 const BingoContainer = styled.div`
   display: flex;
   justify-content: center;
-  padding: 3rem;
+  padding: 5rem;
 `;
 
 const SpinPlaceholder = styled.div`
