@@ -4,7 +4,7 @@ const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 const GoogleAnalytics: FC = () => {
   if (!GA_ID) {
-    return null;
+    return <script async src="" />;
   }
 
   return (
