@@ -1,8 +1,14 @@
 import { GithubOutlined, SyncOutlined, TableOutlined } from '@ant-design/icons';
-import { Button, List, Space, Spin, Typography } from 'antd';
+import { Button, Input, List, Space, Spin, Typography } from 'antd';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import styled from 'styled-components';
 
 import Bingo from '@/components/Bingo';
@@ -23,10 +29,23 @@ const PageContainer = styled.div`
   margin: 0 auto;
 `;
 
+const CustomNameContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 1rem 2rem 0;
+`;
+
+const CustomNameInput = styled(Input)`
+  width: 18.75rem;
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+`;
+
 const BingoContainer = styled.div`
   display: flex;
   justify-content: center;
-  padding: 4rem;
+  padding: 3rem 4rem 4rem;
 `;
 
 const ActionButtonsContainer = styled(Space)`
@@ -59,6 +78,7 @@ function HomePage() {
   const [selectedGene, setSelectedGene] = useState<SelectedGene | null>(null);
   const [hoveredGene, setHoveredGene] = useState<SelectedGene | null>(null);
   const [isBingoDrawerOpen, setIsBingoDrawerOpen] = useState(false);
+  const [customName, setCustomName] = useState('');
 
   useEffect(() => {
     const fetchGenesAndUpdateGeneTable = async () => {
@@ -75,16 +95,15 @@ function HomePage() {
     fetchGenesAndUpdateGeneTable();
   }, []);
 
-  // parse selected geneIds from querystring,
-  // then set into the table
+  // parse selected geneIds and custom name from querystring
   useEffect(() => {
-    const { g: geneQuery } = router.query;
+    const { g: geneQuery, n: customNameQuery } = router.query;
 
-    if (
-      geneTable === EMPTY_GENE_TABLE &&
-      allGenes.length > 0 &&
-      typeof geneQuery === 'string'
-    ) {
+    if (geneTable !== EMPTY_GENE_TABLE || allGenes.length === 0) {
+      return;
+    }
+
+    if (typeof geneQuery === 'string') {
       const totalGenesAmount = EMPTY_GENE_TABLE.flat().length;
       const tableColumnsAmount = EMPTY_GENE_TABLE[0].length;
 
@@ -113,11 +132,33 @@ function HomePage() {
         });
       });
     }
+
+    if (typeof customNameQuery === 'string') {
+      const decodedName = decodeURI(customNameQuery);
+      setCustomName(decodedName);
+    }
   }, [allGenes, geneTable, router]);
 
   // -------------------------------------
   //   Handlers
   // -------------------------------------
+
+  const handleNameChange = useCallback(
+    ({ target }: ChangeEvent<HTMLInputElement>) => {
+      const inputValue = target.value;
+      setCustomName(inputValue);
+
+      router.replace(
+        {
+          pathname: '/',
+          query: { ...router.query, n: encodeURI(inputValue) },
+        },
+        undefined,
+        { shallow: true }
+      );
+    },
+    [router]
+  );
 
   const handlePageRefreshWithGeneIds = useCallback(
     (newGeneTable: GeneTable) => {
@@ -130,7 +171,14 @@ function HomePage() {
       }
 
       const hashedGenes = encodeGeneIdsToQuery(geneIds);
-      router.replace(`/?g=${hashedGenes}`, undefined, { shallow: true });
+      router.replace(
+        {
+          pathname: '/',
+          query: { ...router.query, g: hashedGenes },
+        },
+        undefined,
+        { shallow: true }
+      );
     },
     [router]
   );
@@ -171,8 +219,9 @@ function HomePage() {
       [null, null, null],
     ];
 
-    router.push('/', undefined, { shallow: true });
+    router.push('/', undefined);
     setGeneTable(newGeneTable);
+    setCustomName('');
   }, [router]);
 
   // -------------------------------------
@@ -196,7 +245,7 @@ function HomePage() {
 
   if (allGenes.length === 0) {
     return (
-      <Spin size="large" tip="Loading...">
+      <Spin size="large">
         <SpinPlaceholder />
       </Spin>
     );
@@ -208,6 +257,17 @@ function HomePage() {
         <title>物語2 羈絆基因賓果模擬器</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
+
+      <CustomNameContainer>
+        <CustomNameInput
+          size="large"
+          placeholder="客製化名稱"
+          bordered={false}
+          maxLength={15}
+          value={customName}
+          onChange={handleNameChange}
+        />
+      </CustomNameContainer>
 
       <BingoContainer>
         <Bingo
