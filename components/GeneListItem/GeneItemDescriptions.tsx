@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { ATTACK_TYPE, ATTACK_TYPE_DARK_ICON } from '@/constants/attackType';
 import { GENE_TYPE, GENE_TYPE_ICON } from '@/constants/gene';
 import { SKILL_TYPE } from '@/constants/skillType';
+import { Maybe } from '@/interfaces/common';
 import { Gene as IGene } from '@/interfaces/gene';
 
 const SkillName = styled.span`
@@ -23,7 +24,7 @@ const SKILL_TYPE_TRANSLATION = {
 };
 
 interface Props {
-  gene: IGene;
+  gene: Maybe<IGene>;
 }
 
 const GeneItemDescriptions: FC<Props> = ({ gene }) => {
@@ -36,7 +37,7 @@ const GeneItemDescriptions: FC<Props> = ({ gene }) => {
     minLevel,
     sp,
     monsters,
-  } = gene;
+  } = gene || {};
   const descriptionItemProps = useMemo(
     () => ({
       labelStyle: { fontSize: '0.9rem', alignItems: 'center' },
@@ -58,7 +59,7 @@ const GeneItemDescriptions: FC<Props> = ({ gene }) => {
 
   return (
     <Descriptions size="small" column={1}>
-      {skillType !== SKILL_TYPE.NONE && type !== GENE_TYPE.RAINBOW && (
+      {skillType && type && type !== GENE_TYPE.RAINBOW && (
         <Descriptions.Item
           {...descriptionItemProps}
           label={SKILL_TYPE_TRANSLATION[skillType]}
@@ -76,7 +77,7 @@ const GeneItemDescriptions: FC<Props> = ({ gene }) => {
         </Descriptions.Item>
       )}
 
-      {skillType === SKILL_TYPE.NONE && type !== GENE_TYPE.RAINBOW && (
+      {!skillType && type !== GENE_TYPE.RAINBOW && (
         <Descriptions.Item {...descriptionItemProps}>--</Descriptions.Item>
       )}
 
@@ -97,13 +98,13 @@ const GeneItemDescriptions: FC<Props> = ({ gene }) => {
       )}
 
       <Descriptions.Item {...descriptionItemProps} label="必要等級">
-        {minLevel > 0 ? minLevel : '--'}
+        {!minLevel ? minLevel : '--'}
       </Descriptions.Item>
       <Descriptions.Item {...descriptionItemProps} label="消耗羈絆值">
         {sp ? `${sp} / 100` : '--'}
       </Descriptions.Item>
       <Descriptions.Item {...lastDescriptionItemProps} label="可持有隨行獸">
-        {monsters.join(', ')}
+        {(monsters || []).join(', ')}
       </Descriptions.Item>
     </Descriptions>
   );

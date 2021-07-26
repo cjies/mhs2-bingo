@@ -38,3 +38,17 @@ export const GENE_TYPE_ICON = {
   [GENE_TYPE.ICE]: iceTypeIcon,
   [GENE_TYPE.DRAGON]: dragonTypeIcon,
 } as const;
+
+export enum GENE_LEVEL {
+  S = 'S',
+  M = 'M',
+  L = 'L',
+  XL = 'XL',
+}
+
+export const GENE_LEVEL_COLOR = {
+  [GENE_LEVEL.S]: '#291d0d',
+  [GENE_LEVEL.M]: '#aaa9ad',
+  [GENE_LEVEL.L]: '#d4af37',
+  [GENE_LEVEL.XL]: '#a7d8de',
+};

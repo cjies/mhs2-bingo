@@ -4,9 +4,22 @@ import styled, { css } from 'styled-components';
 
 import { ATTACK_TYPE, ATTACK_TYPE_LIGHT_ICON } from '@/constants/attackType';
 import { DEFAULT_FONT_SIZE } from '@/constants/common';
-import { GENE_COLOR, GENE_EMPTY_COLOR, GENE_TYPE } from '@/constants/gene';
+import {
+  GENE_BORDER_COLOR,
+  GENE_COLOR,
+  GENE_EMPTY_COLOR,
+  GENE_LEVEL,
+  GENE_LEVEL_COLOR,
+  GENE_TYPE,
+} from '@/constants/gene';
 
-export const EmptyGene = styled.div<{ $size: number; $hovered?: boolean }>`
+interface EmptyGeneProps {
+  $size: number;
+  $borderSize: number;
+  $hovered?: boolean;
+}
+
+export const EmptyGene = styled.div<EmptyGeneProps>`
   position: relative;
   display: flex;
   align-items: center;
@@ -17,6 +30,7 @@ export const EmptyGene = styled.div<{ $size: number; $hovered?: boolean }>`
   height: ${(props) => `${props.$size}rem` || '5rem'};
   border-radius: 50%;
   background-color: ${GENE_EMPTY_COLOR};
+  border: ${(props) => `${props.$borderSize}rem solid ${GENE_BORDER_COLOR}`};
   transition: box-shadow 0.2s ease;
 
   ${(props) =>
@@ -43,13 +57,18 @@ interface GeneContainerProps {
   $type: GENE_TYPE;
 }
 
-const GeneContainer = styled(EmptyGene)<GeneContainerProps>`
+const GeneContainer = styled(EmptyGene)<
+  GeneContainerProps & { $borderColor: string }
+>`
   background: ${(props) => GENE_COLOR[props.$type] ?? GENE_EMPTY_COLOR};
+  border-color: ${(props) => props.$borderColor};
 `;
 
 interface Props {
   className?: string;
   size: number; // in rem
+  borderSize: number; // in rem
+  geneLevel: GENE_LEVEL | null;
   geneType: GENE_TYPE;
   attackType: ATTACK_TYPE;
   hovered?: boolean;
@@ -61,6 +80,8 @@ interface Props {
 const Gene: FC<Props> = ({
   className,
   size,
+  borderSize,
+  geneLevel,
   geneType,
   attackType,
   hovered,
@@ -70,11 +91,16 @@ const Gene: FC<Props> = ({
 }) => {
   const attackTypeIcon = ATTACK_TYPE_LIGHT_ICON[attackType];
   const iconSize = (size * DEFAULT_FONT_SIZE) / 1.5; // rem -> px
+  const borderColor = geneLevel
+    ? GENE_LEVEL_COLOR[geneLevel]
+    : GENE_LEVEL_COLOR.S;
 
   return (
     <GeneContainer
       className={className}
       $size={size}
+      $borderSize={borderSize}
+      $borderColor={borderColor}
       $type={geneType}
       $hovered={hovered}
       onClick={onClick}

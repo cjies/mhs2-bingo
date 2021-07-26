@@ -1,12 +1,12 @@
 import { List } from 'antd';
-import { FC, memo, MouseEventHandler, useCallback } from 'react';
+import { FC, memo, MouseEventHandler, useCallback, useMemo } from 'react';
 import styled, { css } from 'styled-components';
 
 import { PRIMARY_COLOR } from '@/constants/common';
 import { Maybe } from '@/interfaces/common';
 import { Gene as IGene } from '@/interfaces/gene';
 
-import Gene from '../Gene';
+import Gene, { EmptyGene } from '../Gene';
 import GeneItemDescriptions from './GeneItemDescriptions';
 
 const ListItem = styled(List.Item)<{ $disabled?: boolean }>`
@@ -55,7 +55,7 @@ const ListItemMeta = styled(List.Item.Meta)<{
 `;
 
 interface Props {
-  gene: IGene;
+  gene: Maybe<IGene>;
   selected?: boolean;
   disabled?: boolean;
   hovered?: boolean;
@@ -73,6 +73,25 @@ const GeneListItem: FC<Props> = ({
   onMouseEnter,
   onMouseLeave,
 }) => {
+  const geneAvatar = useMemo(() => {
+    const size = 3;
+    const borderSize = 0.2;
+
+    if (!gene) {
+      return <EmptyGene $size={size} $borderSize={borderSize} />;
+    }
+
+    return (
+      <Gene
+        size={size}
+        borderSize={borderSize}
+        geneLevel={gene?.level}
+        geneType={gene.type}
+        attackType={gene.attackType}
+      />
+    );
+  }, [gene]);
+
   const handleItemClick = useCallback(() => {
     onClick?.(selected ? null : gene);
   }, [selected, gene, onClick]);
@@ -87,10 +106,8 @@ const GeneListItem: FC<Props> = ({
       <ListItemMeta
         $selected={selected}
         $hovered={hovered}
-        avatar={
-          <Gene size={3} geneType={gene.type} attackType={gene.attackType} />
-        }
-        title={gene.name}
+        avatar={geneAvatar}
+        title={gene?.name ?? '--'}
         description={<GeneItemDescriptions gene={gene} />}
       />
     </ListItem>

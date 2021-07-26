@@ -9,11 +9,8 @@ import Bingo from '@/components/Bingo';
 import BingoTableDrawer from '@/components/BingoTableDrawer';
 import GeneListItem from '@/components/GeneListItem';
 import GeneSelectionModal from '@/components/GeneSelectionModal';
-import { ATTACK_TYPE } from '@/constants/attackType';
-import { GENE_TYPE } from '@/constants/gene';
-import { SKILL_TYPE } from '@/constants/skillType';
 import { Maybe } from '@/interfaces/common';
-import { Gene, GeneId, GeneTable, SelectedGene } from '@/interfaces/gene';
+import { Gene, GeneTable, SelectedGene } from '@/interfaces/gene';
 import {
   decodeGeneIdsFromQuery,
   encodeGeneIdsToQuery,
@@ -182,30 +179,6 @@ function HomePage() {
   //   Render
   // -------------------------------------
 
-  const geneTableForList = useMemo(
-    () =>
-      geneTable.map((row) => {
-        return row.map((gene, index) => {
-          if (!gene) {
-            const fakeGene: Gene = {
-              id: `fake-gene-${index}` as GeneId,
-              type: GENE_TYPE.NORMAL,
-              attackType: ATTACK_TYPE.NONE,
-              name: '--',
-              skillType: SKILL_TYPE.NONE,
-              skillName: '',
-              skillDescription: '',
-              minLevel: 0,
-              sp: 0,
-              monsters: [],
-            };
-            return fakeGene;
-          }
-          return gene;
-        });
-      }),
-    [geneTable]
-  );
   const invalidGeneIds = useMemo(
     () =>
       geneTable
@@ -214,6 +187,7 @@ function HomePage() {
         .map(({ id }) => id),
     [geneTable]
   );
+
   const listStyleParams = useMemo(() => ({ marginBottom: '2rem' }), []);
   const gridParams = useMemo(
     () => ({ gutter: 16, xs: 1, sm: 1, md: 1, lg: 3, xl: 3, xxl: 3 }),
@@ -255,41 +229,47 @@ function HomePage() {
         </Button>
       </ActionButtonsContainer>
 
-      {geneTableForList.map((row, rowIndex) => (
-        <List
-          key={`row-${rowIndex}`}
-          dataSource={row}
-          grid={gridParams}
-          style={listStyleParams}
-          renderItem={(gene, columnIndex) => {
-            const isHovered =
-              hoveredGene?.rowIndex === rowIndex &&
-              hoveredGene?.columnIndex === columnIndex;
+      {geneTable.map((row, rowIndex) => {
+        // antdesign doesn't accept null item
+        const geneRow = row.map((gene) => gene ?? '');
 
-            const handleGeneClick = () => {
-              setSelectedGene({ rowIndex, columnIndex, gene });
-            };
-            const handleMouseEnter = () => {
-              setHoveredGene({ rowIndex, columnIndex, gene });
-            };
-            const handleMouseLeave = () => {
-              setHoveredGene(null);
-            };
+        return (
+          <List
+            key={`row-${rowIndex}`}
+            dataSource={geneRow}
+            grid={gridParams}
+            style={listStyleParams}
+            renderItem={(col, columnIndex) => {
+              const gene = col || null;
+              const isHovered =
+                hoveredGene?.rowIndex === rowIndex &&
+                hoveredGene?.columnIndex === columnIndex;
 
-            return (
-              <GeneListItem
-                key={gene.id}
-                gene={gene}
-                selected
-                hovered={isHovered}
-                onClick={handleGeneClick}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              />
-            );
-          }}
-        />
-      ))}
+              const handleGeneClick = () => {
+                setSelectedGene({ rowIndex, columnIndex, gene });
+              };
+              const handleMouseEnter = () => {
+                setHoveredGene({ rowIndex, columnIndex, gene });
+              };
+              const handleMouseLeave = () => {
+                setHoveredGene(null);
+              };
+
+              return (
+                <GeneListItem
+                  key={gene?.id ?? `empty-gene-${rowIndex}-${columnIndex}`}
+                  gene={gene}
+                  selected
+                  hovered={isHovered}
+                  onClick={handleGeneClick}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                />
+              );
+            }}
+          />
+        );
+      })}
 
       <BingoTableDrawer
         visible={isBingoDrawerOpen}

@@ -2,7 +2,6 @@ import { Grid } from 'antd';
 import { FC, memo, useMemo } from 'react';
 import styled from 'styled-components';
 
-import { GENE_BORDER_COLOR } from '@/constants/gene';
 import { Maybe } from '@/interfaces/common';
 import { GeneTable, SelectedGene } from '@/interfaces/gene';
 import {
@@ -38,14 +37,6 @@ const BingoGrid = styled.div<{ $column: number; $gapSize: number }>`
   grid-auto-rows: min-content;
   column-gap: ${(props) => props.$gapSize}rem;
   row-gap: ${(props) => props.$gapSize}em;
-`;
-
-const StyledEmptyGene = styled(EmptyGene)<{ $borderSize: number }>`
-  border: ${(props) => `${props.$borderSize}rem solid ${GENE_BORDER_COLOR}`};
-`;
-
-const StyledGene = styled(Gene)<{ $borderSize: number }>`
-  border: ${(props) => `${props.$borderSize}rem solid ${GENE_BORDER_COLOR}`};
 `;
 
 interface Props {
@@ -159,10 +150,10 @@ const Bingo: FC<Props> = ({ table, hoveredGene, onGeneClick, onGeneHover }) => {
 
           if (!gene) {
             return (
-              <StyledEmptyGene
+              <EmptyGene
                 key={geneKey}
-                $borderSize={sizes.borderSize}
                 $size={sizes.geneSize}
+                $borderSize={sizes.borderSize}
                 $hovered={isHovered}
                 onClick={handleGeneClick}
                 onMouseEnter={handleMouseEnter}
@@ -172,10 +163,11 @@ const Bingo: FC<Props> = ({ table, hoveredGene, onGeneClick, onGeneHover }) => {
           }
 
           return (
-            <StyledGene
+            <Gene
               key={geneKey}
-              $borderSize={sizes.borderSize}
               size={sizes.geneSize}
+              borderSize={sizes.borderSize}
+              geneLevel={gene.level}
               geneType={gene.type}
               attackType={gene.attackType}
               hovered={isHovered}

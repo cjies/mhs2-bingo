@@ -5,7 +5,7 @@ import { join } from 'path';
 import shortHash from 'shorthash2';
 
 import { ATTACK_TYPE } from '@/constants/attackType';
-import { GENE_TYPE } from '@/constants/gene';
+import { GENE_LEVEL, GENE_TYPE } from '@/constants/gene';
 import { SKILL_TYPE } from '@/constants/skillType';
 import { Gene, GeneId } from '@/interfaces/gene';
 
@@ -33,6 +33,13 @@ const ATTACK_TYPE_MAP: Record<string, ATTACK_TYPE> = {
   無: ATTACK_TYPE.NONE,
 };
 
+const GENE_LEVEL_MAP: Record<string, GENE_LEVEL> = {
+  '【小】': GENE_LEVEL.S,
+  '【中】': GENE_LEVEL.M,
+  '【大】': GENE_LEVEL.L,
+  '【特大】': GENE_LEVEL.XL,
+};
+
 const fetchGenesByType = async (geneType: GENE_TYPE): Promise<Gene[]> => {
   const basePath =
     process.env.NODE_ENV === 'production'
@@ -44,14 +51,29 @@ const fetchGenesByType = async (geneType: GENE_TYPE): Promise<Gene[]> => {
   const rows = await neatCsv(fileBuffer);
 
   return rows.map((data, index) => {
+    const name = data['基因名稱'];
     const attackType = ATTACK_TYPE_MAP[data['類型']];
     const id = shortHash(`${geneType}-${attackType}-${index}`) as GeneId;
+
+    // parse gene level from name
+    const geneLevel = Object.entries(GENE_LEVEL_MAP).reduce<GENE_LEVEL | null>(
+      (level, [key, value], _, arr) => {
+        if (name.endsWith(key)) {
+          level = value;
+          arr.splice(1); // eject early by mutating iterated copy
+        }
+
+        return level;
+      },
+      null
+    );
 
     const gene: Gene = {
       id,
       type: geneType,
+      level: geneLevel,
       attackType,
-      name: data['基因名稱'],
+      name,
       skillType: SKILL_TYPE_MAP[data['主/被動']],
       skillName: data['技能名稱'],
       skillDescription: data['技能詳情'],
