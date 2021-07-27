@@ -107,12 +107,17 @@ const BingoTableDrawer: FC<Props> = ({ visible, geneTable, onClose }) => {
     const geneTypeRows = GENE_TYPE_ROWS.map(({ type, label }) => {
       const icon = type !== GENE_TYPE.RAINBOW ? GENE_TYPE_ICON[type] : null;
 
-      const matchCount = bingoResults.filter(({ geneType }) => {
+      const matchResult = bingoResults.filter(({ geneType }) => {
         if (type in GENE_TYPE && geneType) {
           return type === geneType;
         }
         return false;
-      }).length;
+      });
+      const percentage = matchResult.reduce((acc, _, index) => {
+        // first two * 10%, rest * 5%
+        const accumulatedRate = index > 1 ? 5 : 10;
+        return acc + accumulatedRate;
+      }, 100);
 
       return {
         label: (
@@ -121,8 +126,8 @@ const BingoTableDrawer: FC<Props> = ({ visible, geneTable, onClose }) => {
             <LabelText>{label}</LabelText>
           </Label>
         ),
-        matchCount: `x ${matchCount}`,
-        percentage: `${100 + matchCount * 10} %`,
+        matchCount: `x ${matchResult.length}`,
+        percentage: `${percentage} %`,
       };
     });
 
@@ -130,12 +135,17 @@ const BingoTableDrawer: FC<Props> = ({ visible, geneTable, onClose }) => {
       const icon =
         type !== ATTACK_TYPE.RAINBOW ? ATTACK_TYPE_DARK_ICON[type] : null;
 
-      const matchCount = bingoResults.filter(({ attackType }) => {
+      const matchResult = bingoResults.filter(({ attackType }) => {
         if (type in ATTACK_TYPE && attackType) {
           return type === attackType;
         }
         return false;
-      }).length;
+      });
+      const percentage = matchResult.reduce((acc, _, index) => {
+        // first two * 10%, rest * 5%
+        const accumulatedRate = index > 1 ? 5 : 10;
+        return acc + accumulatedRate;
+      }, 100);
 
       return {
         label: (
@@ -144,8 +154,8 @@ const BingoTableDrawer: FC<Props> = ({ visible, geneTable, onClose }) => {
             <LabelText>{label}</LabelText>
           </Label>
         ),
-        matchCount: `x ${matchCount}`,
-        percentage: `${100 + matchCount * 10} %`,
+        matchCount: `x ${matchResult.length}`,
+        percentage: `${percentage} %`,
       };
     });
 
