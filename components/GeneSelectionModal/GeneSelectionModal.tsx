@@ -1,5 +1,13 @@
-import { Button, Modal, Tabs } from 'antd';
-import { FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { Button, Input, Modal, Select, Space, Tabs } from 'antd';
+import {
+  ChangeEvent,
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import styled from 'styled-components';
 
 import { ATTACK_TYPE } from '@/constants/attackType';
@@ -8,8 +16,13 @@ import { GENE_TYPE } from '@/constants/gene';
 import { Maybe } from '@/interfaces/common';
 import { Gene as IGene, GeneId } from '@/interfaces/gene';
 
-import { ALL_TYPE, TABS } from './constants';
-import GeneTabPane from './GeneTabPane';
+import {
+  ALL_TYPE,
+  ATTACK_TYPE_OPTIONS,
+  GENE_TYPE_OPTIONS,
+  TABS,
+} from './constants';
+import GeneList from './GeneList';
 
 const StyledModal = styled(Modal)`
   .ant-modal-content {
@@ -45,6 +58,19 @@ const StyledTabs = styled(Tabs)`
   }
 `;
 
+const SearchContainer = styled(Space)`
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  margin: 0.5rem 1em 2rem;
+`;
+
+const SearchInput = styled(Input.Search)`
+  width: 14rem;
+`;
+
+type TabKey = typeof ALL_TYPE | GENE_TYPE | ATTACK_TYPE;
+
 interface Props {
   visible: boolean;
   genes: IGene[];
@@ -63,9 +89,17 @@ const GeneSelectionModal: FC<Props> = ({
   onCancel,
 }) => {
   const [toBeSelectedGene, setToBeSelectedGene] = useState(selectedGene);
-  const [tabKey, setTabKey] = useState(ALL_TYPE);
+  const [tabKey, setTabKey] = useState<TabKey>(ALL_TYPE);
+  const [searchInputValue, setSearchInputValue] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredGeneType, setFilteredGeneType] = useState<
+    GENE_TYPE | typeof ALL_TYPE
+  >(ALL_TYPE);
+  const [filteredAttackType, setFilteredAttackType] = useState<
+    ATTACK_TYPE | typeof ALL_TYPE
+  >(ALL_TYPE);
 
-  const filteredGenes = useMemo(() => {
+  const filteredGenesByTab = useMemo(() => {
     if (tabKey === ALL_TYPE) {
       return genes;
     }
@@ -81,6 +115,22 @@ const GeneSelectionModal: FC<Props> = ({
     });
   }, [genes, tabKey]);
 
+  const filteredGenesBySelections = useMemo(() => {
+    return filteredGenesByTab
+      .filter((gene) => {
+        if (filteredGeneType === ALL_TYPE) {
+          return true;
+        }
+        return gene.type === filteredGeneType;
+      })
+      .filter((gene) => {
+        if (filteredAttackType === ALL_TYPE) {
+          return true;
+        }
+        return gene.attackType === filteredAttackType;
+      });
+  }, [filteredGenesByTab, filteredGeneType, filteredAttackType]);
+
   // Reset internal states
   useEffect(() => {
     if (visible) {
@@ -94,6 +144,28 @@ const GeneSelectionModal: FC<Props> = ({
   // -------------------------------------
   //   Handlers
   // -------------------------------------
+
+  const handleSearchInputChange = useCallback(
+    ({ target }: ChangeEvent<HTMLInputElement>) => {
+      setSearchInputValue(target.value);
+    },
+    []
+  );
+
+  const handleSearch = useCallback((value: string) => {
+    setSearchInputValue(value);
+    setSearchQuery(value);
+  }, []);
+
+  const handleTabKeyChange = useCallback((tabKey: string) => {
+    if (tabKey in GENE_TYPE) {
+      setFilteredGeneType(ALL_TYPE);
+    }
+    if (tabKey in ATTACK_TYPE) {
+      setFilteredAttackType(ALL_TYPE);
+    }
+    setTabKey(tabKey as TabKey);
+  }, []);
 
   const handleModalReset = useCallback(() => {
     onApply(null);
@@ -150,15 +222,56 @@ const GeneSelectionModal: FC<Props> = ({
       onOk={handleModalApply}
       onCancel={onCancel}
     >
-      <StyledTabs type="card" activeKey={tabKey} onChange={setTabKey}>
+      <StyledTabs type="card" activeKey={tabKey} onChange={handleTabKeyChange}>
         {TABS.map((tab) => (
           <Tabs.TabPane key={tab.key} tab={tab.label}>
-            <GeneTabPane
-              searchPlaceholder={tab.searchPlaceholder ?? ''}
-              genes={filteredGenes}
+            <SearchContainer>
+              {!(tabKey in GENE_TYPE) && (
+                <Select value={filteredGeneType} onChange={setFilteredGeneType}>
+                  <Select.Option value={ALL_TYPE}>全部屬性</Select.Option>
+                  {GENE_TYPE_OPTIONS.map((option) => (
+                    <Select.Option
+                      key={`gene-type-filter-${option.key}`}
+                      value={option.key}
+                    >
+                      {option.label}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+              {!(tabKey in ATTACK_TYPE) && (
+                <Select
+                  value={filteredAttackType}
+                  onChange={setFilteredAttackType}
+                >
+                  <Select.Option value={ALL_TYPE}>力速技</Select.Option>
+                  {ATTACK_TYPE_OPTIONS.map((option) => (
+                    <Select.Option
+                      key={`attack-type-filter-${option.key}`}
+                      value={option.key}
+                    >
+                      {option.label}
+                    </Select.Option>
+                  ))}
+                </Select>
+              )}
+
+              <SearchInput
+                allowClear
+                enterButton="搜尋"
+                placeholder={tab.searchPlaceholder ?? ''}
+                value={searchInputValue}
+                onChange={handleSearchInputChange}
+                onSearch={handleSearch}
+              />
+            </SearchContainer>
+
+            <GeneList
+              genes={filteredGenesBySelections}
               selectedGene={selectedGene}
               toBeSelectedGene={toBeSelectedGene}
               invalidGeneIds={invalidGeneIds}
+              searchQuery={searchQuery}
               onGeneClick={setToBeSelectedGene}
             />
           </Tabs.TabPane>

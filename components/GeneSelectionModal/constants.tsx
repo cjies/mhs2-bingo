@@ -18,12 +18,7 @@ const LabelText = styled.span`
 
 export const ALL_TYPE = 'ALL';
 
-export const TABS = [
-  {
-    key: ALL_TYPE,
-    label: '全部',
-    searchPlaceholder: '全部基因',
-  },
+export const GENE_TYPE_OPTIONS = [
   {
     key: GENE_TYPE.NORMAL,
     label: (
@@ -52,6 +47,7 @@ export const TABS = [
         />
       </Label>
     ),
+    searchPlaceholder: '火屬性基因',
   },
   {
     key: GENE_TYPE.WATER,
@@ -113,6 +109,9 @@ export const TABS = [
     ),
     searchPlaceholder: '龍屬性基因',
   },
+];
+
+export const ATTACK_TYPE_OPTIONS = [
   {
     key: ATTACK_TYPE.POWER,
     label: (
@@ -158,4 +157,14 @@ export const TABS = [
     ),
     searchPlaceholder: '技巧基因',
   },
+];
+
+export const TABS = [
+  {
+    key: ALL_TYPE,
+    label: '全部',
+    searchPlaceholder: '全部基因',
+  },
+  ...GENE_TYPE_OPTIONS,
+  ...ATTACK_TYPE_OPTIONS,
 ];
