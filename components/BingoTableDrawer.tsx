@@ -1,6 +1,6 @@
 import { Drawer, Grid, Table } from 'antd';
 import Image from 'next/image';
-import React, { FC, memo, useMemo } from 'react';
+import { FC, memo, useMemo } from 'react';
 import styled from 'styled-components';
 
 import { ATTACK_TYPE, ATTACK_TYPE_DARK_ICON } from '@/constants/attackType';

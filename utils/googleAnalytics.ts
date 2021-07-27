@@ -16,8 +16,8 @@ export const gaPageView = (url: string): void => {
   window.gtag('config', GA_ID, { page_path: url });
 };
 
-// log specific events happening.
-export const gaEvent = ({ action, params }: Record<string, string>): void => {
+// log specific events happening
+export const gaEvent = (action: string, params?: Record<string, any>): void => {
   if (!GA_ID || !window.gtag) {
     return;
   }

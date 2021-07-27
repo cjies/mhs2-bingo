@@ -2,8 +2,9 @@ import { GithubOutlined, SyncOutlined, TableOutlined } from '@ant-design/icons';
 import { Button, Input, List, Space, Spin, Typography } from 'antd';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React, {
+import {
   ChangeEvent,
+  FocusEvent,
   useCallback,
   useEffect,
   useMemo,
@@ -15,12 +16,14 @@ import Bingo from '@/components/Bingo';
 import BingoTableDrawer from '@/components/BingoTableDrawer';
 import GeneListItem from '@/components/GeneListItem';
 import GeneSelectionModal from '@/components/GeneSelectionModal';
+import { GA_EVENT } from '@/constants/gaEventName';
 import { Maybe } from '@/interfaces/common';
 import { Gene, GeneTable, SelectedGene } from '@/interfaces/gene';
 import {
   decodeGeneIdsFromQuery,
   encodeGeneIdsToQuery,
 } from '@/utils/geneQuery';
+import { gaEvent } from '@/utils/googleAnalytics';
 
 const { Text, Link } = Typography;
 
@@ -143,7 +146,7 @@ function HomePage() {
   //   Handlers
   // -------------------------------------
 
-  const handleNameChange = useCallback(
+  const handleCustomNameChange = useCallback(
     ({ target }: ChangeEvent<HTMLInputElement>) => {
       const inputValue = target.value;
       setCustomName(inputValue);
@@ -159,6 +162,21 @@ function HomePage() {
     },
     [router]
   );
+
+  const handleCustomNameBlur = useCallback(
+    ({ target }: FocusEvent<HTMLInputElement>) => {
+      gaEvent(GA_EVENT.SET_CUSTOM_NAME, { name: target.value });
+    },
+    []
+  );
+
+  const handleGeneClick = useCallback((selectedGene: SelectedGene) => {
+    setSelectedGene(selectedGene);
+    gaEvent(GA_EVENT.CLICK_GENE, {
+      rowIndex: selectedGene.rowIndex,
+      columnIndex: selectedGene.columnIndex,
+    });
+  }, []);
 
   const handlePageRefreshWithGeneIds = useCallback(
     (newGeneTable: GeneTable) => {
@@ -196,6 +214,17 @@ function HomePage() {
         return newGeneTable;
       });
       setSelectedGene(null);
+
+      // track behavior
+      if (newGene) {
+        gaEvent(GA_EVENT.ADD_GENE, {
+          gene: newGene,
+          rowIndex,
+          columnIndex,
+        });
+      } else {
+        gaEvent(GA_EVENT.RESET_GENE, { rowIndex, columnIndex });
+      }
     },
     [selectedGene, handlePageRefreshWithGeneIds]
   );
@@ -206,6 +235,7 @@ function HomePage() {
 
   const handleBingoDrawerOpen = useCallback(() => {
     setIsBingoDrawerOpen(true);
+    gaEvent(GA_EVENT.VIEW_BINGO_DRAWER);
   }, []);
 
   const handleBingoDrawerClose = useCallback(() => {
@@ -222,6 +252,7 @@ function HomePage() {
     router.push('/', undefined);
     setGeneTable(newGeneTable);
     setCustomName('');
+    gaEvent(GA_EVENT.RESET_TABLE);
   }, [router]);
 
   // -------------------------------------
@@ -265,7 +296,8 @@ function HomePage() {
           bordered={false}
           maxLength={15}
           value={customName}
-          onChange={handleNameChange}
+          onChange={handleCustomNameChange}
+          onBlur={handleCustomNameBlur}
         />
       </CustomNameContainer>
 
@@ -273,7 +305,7 @@ function HomePage() {
         <Bingo
           table={geneTable}
           hoveredGene={hoveredGene}
-          onGeneClick={setSelectedGene}
+          onGeneClick={handleGeneClick}
           onGeneHover={setHoveredGene}
         />
       </BingoContainer>
@@ -307,6 +339,10 @@ function HomePage() {
 
               const handleGeneClick = () => {
                 setSelectedGene({ rowIndex, columnIndex, gene });
+                gaEvent(GA_EVENT.CLICK_LIST_ITEM, {
+                  rowIndex,
+                  columnIndex,
+                });
               };
               const handleMouseEnter = () => {
                 setHoveredGene({ rowIndex, columnIndex, gene });
