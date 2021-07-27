@@ -98,10 +98,10 @@ const GeneItemDescriptions: FC<Props> = ({ gene }) => {
       )}
 
       <Descriptions.Item {...descriptionItemProps} label="必要等級">
-        {!minLevel ? minLevel : '--'}
+        {minLevel ? minLevel : '--'}
       </Descriptions.Item>
       <Descriptions.Item {...descriptionItemProps} label="消耗羈絆值">
-        {sp ? `${sp} / 100` : '--'}
+        {sp ? `${sp} / 100` : '-- / --'}
       </Descriptions.Item>
       <Descriptions.Item {...lastDescriptionItemProps} label="可持有隨行獸">
         {(monsters || []).join(', ')}
