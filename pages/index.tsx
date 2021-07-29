@@ -294,7 +294,11 @@ function HomePage() {
   return (
     <PageContainer>
       <Head>
-        <title>物語2 羈絆基因賓果模擬器</title>
+        <title>
+          {customName
+            ? `${customName} - 物語2 羈絆基因賓果模擬器`
+            : '物語2 羈絆基因賓果模擬器'}
+        </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
 
