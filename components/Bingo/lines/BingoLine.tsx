@@ -25,6 +25,7 @@ const Line = styled.div<LineProps>`
   border-radius: 0.25rem;
   background-color: ${(props) =>
     props.$match ? GENE_BORDER_COLOR_MATCH : GENE_BORDER_COLOR};
+  transition: background-color 0.2s ease;
 `;
 
 interface IndicatorProps {
