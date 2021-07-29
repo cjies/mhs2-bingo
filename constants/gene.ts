@@ -47,7 +47,7 @@ export enum GENE_LEVEL {
 }
 
 export const GENE_LEVEL_COLOR = {
-  [GENE_LEVEL.S]: '#291d0d',
+  [GENE_LEVEL.S]: '#483517',
   [GENE_LEVEL.M]: '#aaa9ad',
   [GENE_LEVEL.L]: '#d4af37',
   [GENE_LEVEL.XL]: '#a7d8de',

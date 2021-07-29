@@ -23,6 +23,7 @@ const Line = styled.div<LineProps>`
   width: 90%;
   height: ${(props) => props.$lineSize}rem;
   border-radius: 0.25rem;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
   background-color: ${(props) =>
     props.$match ? GENE_BORDER_COLOR_MATCH : GENE_BORDER_COLOR};
   transition: background-color 0.2s ease;

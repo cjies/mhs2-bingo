@@ -5,7 +5,7 @@ import { GENE_BORDER_COLOR, GENE_EMPTY_COLOR } from '@/constants/gene';
 
 const GeneWrapper = styled.div<{ $hovered?: boolean }>`
   position: relative;
-  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.1));
   transition: filter 0.2s ease;
 
   ${(props) =>
@@ -64,8 +64,8 @@ const Gene = styled.div<StyledGeneProps>`
   justify-content: center;
   user-select: none;
 
-  width: ${(props) => `${props.$size - props.$borderSize * 2}rem`};
-  height: ${(props) => `${props.$size - props.$borderSize * 2}rem`};
+  width: ${(props) => `${props.$size - props.$borderSize * 2.5}rem`};
+  height: ${(props) => `${props.$size - props.$borderSize * 2.5}rem`};
   background: ${(props) => props.$backgroundColor || GENE_EMPTY_COLOR};
 
   /* octagon shape */
