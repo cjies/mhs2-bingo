@@ -13,12 +13,12 @@ const GeneWrapper = styled.div<{ $hovered?: boolean }>`
       ? css`
           @media (hover: hover) and (pointer: fine) {
             &:hover {
-              filter: drop-shadow(0px 0px 5px rgba(0, 159, 255, 0.8));
+              filter: drop-shadow(0 0 10px rgba(0, 159, 255, 1));
             }
 
             ${props.$hovered &&
             css`
-              filter: drop-shadow(0px 0px 5px rgba(0, 159, 255, 0.8));
+              filter: drop-shadow(0 0 10px rgba(0, 159, 255, 1));
             `}
           }
         `

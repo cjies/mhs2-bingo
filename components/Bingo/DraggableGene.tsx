@@ -10,7 +10,7 @@ const DroppableContainer = styled.div<{ $overing: boolean }>`
   ${(props) =>
     props.$overing &&
     css`
-      filter: drop-shadow(0px 0px 5px rgba(0, 159, 255, 0.8));
+      filter: drop-shadow(0 0 10px rgba(0, 159, 255, 1));
     `}
 `;
 
