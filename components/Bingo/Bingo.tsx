@@ -1,5 +1,14 @@
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
 import { Grid } from 'antd';
-import { FC, memo, useMemo } from 'react';
+import { FC, memo, useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { Maybe } from '@/interfaces/common';
@@ -10,7 +19,7 @@ import {
   matchVerticalGenes,
 } from '@/utils/matchers';
 
-import Gene, { EmptyGene } from '../Gene';
+import BingoGene from './BingoGene';
 import {
   GENE_GAP,
   GENE_GAP_XS,
@@ -19,6 +28,7 @@ import {
   GENE_SIZE,
   GENE_SIZE_XS,
 } from './constants';
+import DraggableGene from './DraggableGene';
 import {
   BingoDiagonalLine1,
   BingoDiagonalLine2,
@@ -39,15 +49,59 @@ const BingoGrid = styled.div<{ $column: number; $gapSize: number }>`
   row-gap: ${(props) => props.$gapSize}em;
 `;
 
+const DraggingGene = styled(BingoGene)`
+  cursor: grabbing;
+`;
+
 interface Props {
   table: GeneTable;
   hoveredGene: Maybe<SelectedGene>;
   onGeneClick: (selectedGene: SelectedGene) => void;
   onGeneHover: (selectedGene: Maybe<SelectedGene>) => void;
+  onTableSort: (table: GeneTable) => void;
 }
 
-const Bingo: FC<Props> = ({ table, hoveredGene, onGeneClick, onGeneHover }) => {
+const Bingo: FC<Props> = ({
+  table,
+  hoveredGene,
+  onGeneClick,
+  onGeneHover,
+  onTableSort,
+}) => {
   const screens = Grid.useBreakpoint();
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 1 } })
+  );
+  const [draggedGene, setDraggedGene] = useState<SelectedGene | null>(null);
+
+  const handleDragStart = useCallback(({ active }: DragStartEvent) => {
+    const activeGene = active.data.current as SelectedGene;
+    setDraggedGene(activeGene);
+
+    // prevent body scrolls
+    document.body.style.overflow = 'hidden';
+  }, []);
+
+  const handleDragEnd = useCallback(
+    ({ active, over }: DragEndEvent) => {
+      const activeGene = active.data.current as SelectedGene;
+      const overGene = over?.data.current as SelectedGene | undefined;
+
+      // reset body scrolls
+      document.body.style.overflow = '';
+      setDraggedGene(null);
+
+      // Swap active and over genes
+      if (overGene && activeGene.gene !== overGene.gene) {
+        const newTable: GeneTable = JSON.parse(JSON.stringify(table));
+        newTable[activeGene.rowIndex][activeGene.columnIndex] = overGene.gene;
+        newTable[overGene.rowIndex][overGene.columnIndex] = activeGene.gene;
+        onTableSort(newTable);
+        return;
+      }
+    },
+    [table, onTableSort]
+  );
 
   const sizes = useMemo(() => {
     if (screens.xs) {
@@ -131,53 +185,41 @@ const Bingo: FC<Props> = ({ table, hoveredGene, onGeneClick, onGeneHover }) => {
         matchedAttackType={diagonalResult[1].attackType}
       />
 
-      {table.map((row, rowIndex) => {
-        return row.map((gene, columnIndex) => {
-          const geneKey = `gene.${gene?.id ?? `${rowIndex}.${columnIndex}`}`;
-          const isHovered =
-            hoveredGene?.rowIndex === rowIndex &&
-            hoveredGene?.columnIndex === columnIndex;
+      <DndContext
+        sensors={sensors}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        {table.map((row, rowIndex) => {
+          return row.map((gene, columnIndex) => {
+            const geneKey = `gene.${gene?.id ?? `${rowIndex}.${columnIndex}`}`;
 
-          const handleGeneClick = () => {
-            onGeneClick({ rowIndex, columnIndex, gene });
-          };
-          const handleMouseEnter = () => {
-            onGeneHover({ rowIndex, columnIndex, gene });
-          };
-          const handleMouseLeave = () => {
-            onGeneHover(null);
-          };
-
-          if (!gene) {
             return (
-              <EmptyGene
+              <DraggableGene
                 key={geneKey}
-                $size={sizes.geneSize}
-                $borderSize={sizes.borderSize}
-                $hovered={isHovered}
-                onClick={handleGeneClick}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+                gene={gene}
+                rowIndex={rowIndex}
+                columnIndex={columnIndex}
+                sizes={sizes}
+                hoveredGene={hoveredGene}
+                onGeneClick={onGeneClick}
+                onGeneHover={onGeneHover}
               />
             );
-          }
+          });
+        })}
 
-          return (
-            <Gene
-              key={geneKey}
-              size={sizes.geneSize}
-              borderSize={sizes.borderSize}
-              geneLevel={gene.level}
-              geneType={gene.type}
-              attackType={gene.attackType}
-              hovered={isHovered}
-              onClick={handleGeneClick}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
+        <DragOverlay>
+          {draggedGene ? (
+            <DraggingGene
+              gene={draggedGene.gene}
+              rowIndex={-1}
+              columnIndex={-1}
+              sizes={sizes}
             />
-          );
-        });
-      })}
+          ) : null}
+        </DragOverlay>
+      </DndContext>
     </BingoGrid>
   );
 };

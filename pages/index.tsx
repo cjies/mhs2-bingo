@@ -242,6 +242,15 @@ function HomePage() {
     setIsBingoDrawerOpen(false);
   }, []);
 
+  // update the table by swapping the genes
+  const handleGeneTableSort = useCallback(
+    (newGeneTable: GeneTable) => {
+      handlePageRefreshWithGeneIds(newGeneTable);
+      setGeneTable(newGeneTable);
+    },
+    [handlePageRefreshWithGeneIds]
+  );
+
   const handleGeneTableReset = useCallback(() => {
     const newGeneTable = [
       [null, null, null],
@@ -307,6 +316,7 @@ function HomePage() {
           hoveredGene={hoveredGene}
           onGeneClick={handleGeneClick}
           onGeneHover={setHoveredGene}
+          onTableSort={handleGeneTableSort}
         />
       </BingoContainer>
 

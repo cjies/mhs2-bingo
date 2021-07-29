@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { FC, memo, MouseEventHandler } from 'react';
+import { CSSProperties, forwardRef, memo, MouseEventHandler } from 'react';
 import styled, { css } from 'styled-components';
 
 import { ATTACK_TYPE, ATTACK_TYPE_LIGHT_ICON } from '@/constants/attackType';
@@ -66,6 +66,7 @@ const GeneContainer = styled(EmptyGene)<
 
 interface Props {
   className?: string;
+  style?: CSSProperties;
   size: number; // in rem
   borderSize: number; // in rem
   geneLevel: GENE_LEVEL | null;
@@ -77,46 +78,54 @@ interface Props {
   onMouseLeave?: MouseEventHandler<HTMLDivElement>;
 }
 
-const Gene: FC<Props> = ({
-  className,
-  size,
-  borderSize,
-  geneLevel,
-  geneType,
-  attackType,
-  hovered,
-  onClick,
-  onMouseEnter,
-  onMouseLeave,
-}) => {
-  const attackTypeIcon = ATTACK_TYPE_LIGHT_ICON[attackType];
-  const iconSize = (size * DEFAULT_FONT_SIZE) / 1.5; // rem -> px
-  const borderColor = geneLevel
-    ? GENE_LEVEL_COLOR[geneLevel]
-    : GENE_LEVEL_COLOR.S;
+const Gene = forwardRef<HTMLDivElement, Props>(
+  (
+    {
+      size,
+      borderSize,
+      geneLevel,
+      geneType,
+      attackType,
+      hovered,
+      onClick,
+      onMouseEnter,
+      onMouseLeave,
+      ...props
+    },
+    ref
+  ) => {
+    const attackTypeIcon = ATTACK_TYPE_LIGHT_ICON[attackType];
+    const iconSize = (size * DEFAULT_FONT_SIZE) / 1.5; // rem -> px
+    const borderColor = geneLevel
+      ? GENE_LEVEL_COLOR[geneLevel]
+      : GENE_LEVEL_COLOR.S;
 
-  return (
-    <GeneContainer
-      className={className}
-      $size={size}
-      $borderSize={borderSize}
-      $borderColor={borderColor}
-      $type={geneType}
-      $hovered={hovered}
-      onClick={onClick}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-    >
-      {attackTypeIcon && (
-        <Image
-          src={attackTypeIcon}
-          width={iconSize}
-          height={iconSize}
-          alt="icon"
-        />
-      )}
-    </GeneContainer>
-  );
-};
+    return (
+      <GeneContainer
+        {...props}
+        ref={ref}
+        $size={size}
+        $borderSize={borderSize}
+        $borderColor={borderColor}
+        $type={geneType}
+        $hovered={hovered}
+        onClick={onClick}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      >
+        {attackTypeIcon && (
+          <Image
+            src={attackTypeIcon}
+            width={iconSize}
+            height={iconSize}
+            alt="icon"
+          />
+        )}
+      </GeneContainer>
+    );
+  }
+);
+
+Gene.displayName = 'Gene';
 
 export default memo(Gene);
