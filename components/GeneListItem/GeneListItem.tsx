@@ -78,7 +78,7 @@ const GeneListItem: FC<Props> = ({
     const borderSize = 0.2;
 
     if (!gene) {
-      return <EmptyGene $size={size} $borderSize={borderSize} />;
+      return <EmptyGene size={size} borderSize={borderSize} />;
     }
 
     return (

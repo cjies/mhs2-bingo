@@ -50,9 +50,9 @@ const BingoGene = forwardRef<HTMLDivElement, Props>(
       return (
         <EmptyGene
           ref={ref}
-          $size={sizes.geneSize}
-          $borderSize={sizes.borderSize}
-          $hovered={isHovered}
+          size={sizes.geneSize}
+          borderSize={sizes.borderSize}
+          hovered={isHovered}
           onClick={handleGeneClick}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}

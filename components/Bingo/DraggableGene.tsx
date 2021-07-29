@@ -5,12 +5,12 @@ import styled, { css } from 'styled-components';
 import BingoGene, { Props } from './BingoGene';
 
 const DroppableContainer = styled.div<{ $overing: boolean }>`
-  transition: box-shadow 0.2s ease;
+  transition: filter 0.2s ease;
 
   ${(props) =>
     props.$overing &&
     css`
-      box-shadow: 0 0 10px 5px rgba(0, 159, 255, 0.7);
+      filter: drop-shadow(0px 0px 5px rgba(0, 159, 255, 0.8));
     `}
 `;
 
