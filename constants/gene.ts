@@ -1,9 +1,16 @@
+import { GeneTable } from '@/interfaces/gene';
 import dragonTypeIcon from '@/public/images/dragon-type.png';
 import fireTypeIcon from '@/public/images/fire-type.png';
 import iceTypeIcon from '@/public/images/ice-type.png';
 import normalTypeIcon from '@/public/images/normal-type.png';
 import thunderTypeIcon from '@/public/images/thunder-type.png';
 import waterTypeIcon from '@/public/images/water-type.png';
+
+export const EMPTY_GENE_TABLE: GeneTable = [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
 
 export enum GENE_TYPE {
   RAINBOW = 'RAINBOW',

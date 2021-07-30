@@ -1,7 +1,10 @@
 import { decode, encodeURI } from 'js-base64';
 
+import { EMPTY_GENE_TABLE } from '@/constants/gene';
 import { Maybe } from '@/interfaces/common';
-import { GeneId } from '@/interfaces/gene';
+import { Gene, GeneId, GeneTable } from '@/interfaces/gene';
+
+import deepClone from './deepClone';
 
 const ID_SEPARATOR = ',';
 
@@ -34,4 +37,38 @@ export function decodeGeneIdsFromQuery(
     console.warn('failed to decode gene ids', err);
     return null;
   }
+}
+
+export function decodeGeneTableFromQuery(
+  query: string,
+  allGenes: Gene[]
+): { table: GeneTable; valid: boolean } {
+  const defaultGeneTable = deepClone(EMPTY_GENE_TABLE);
+  const totalGenesAmount = defaultGeneTable.flat().length;
+  const tableColumnsAmount = defaultGeneTable[0].length;
+
+  const geneIds = decodeGeneIdsFromQuery(query, totalGenesAmount);
+  if (!geneIds) {
+    return {
+      table: defaultGeneTable,
+      valid: !query,
+    };
+  }
+
+  geneIds.forEach((geneId, index) => {
+    const validGene = allGenes.find(({ id }) => id === geneId);
+
+    if (!validGene) {
+      return;
+    }
+
+    const colIndex = index % tableColumnsAmount;
+    const rowIndex = Math.ceil((index + 1) / tableColumnsAmount) - 1;
+    defaultGeneTable[rowIndex][colIndex] = validGene;
+  });
+
+  return {
+    table: defaultGeneTable,
+    valid: true,
+  };
 }

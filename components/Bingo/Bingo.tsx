@@ -13,6 +13,7 @@ import styled from 'styled-components';
 
 import { Maybe } from '@/interfaces/common';
 import { GeneTable, SelectedGene } from '@/interfaces/gene';
+import deepClone from '@/utils/deepClone';
 import {
   matchDiagonalGenes,
   matchHorizontalGenes,
@@ -93,7 +94,7 @@ const Bingo: FC<Props> = ({
 
       // Swap active and over genes
       if (overGene && activeGene.gene !== overGene.gene) {
-        const newTable: GeneTable = JSON.parse(JSON.stringify(table));
+        const newTable = deepClone(table);
         newTable[activeGene.rowIndex][activeGene.columnIndex] = overGene.gene;
         newTable[overGene.rowIndex][overGene.columnIndex] = activeGene.gene;
         onTableSort(newTable);

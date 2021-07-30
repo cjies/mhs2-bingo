@@ -1,15 +1,9 @@
 import { GithubOutlined, SyncOutlined, TableOutlined } from '@ant-design/icons';
-import { Button, Input, List, Space, Spin, Typography } from 'antd';
+import { Button, Input, List, Space, Typography } from 'antd';
+import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import {
-  ChangeEvent,
-  FocusEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { ChangeEvent, FocusEvent, useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import Bingo from '@/components/Bingo';
@@ -17,10 +11,11 @@ import BingoTableDrawer from '@/components/BingoTableDrawer';
 import GeneListItem from '@/components/GeneListItem';
 import GeneSelectionModal from '@/components/GeneSelectionModal';
 import { GA_EVENT } from '@/constants/gaEventName';
+import { EMPTY_GENE_TABLE } from '@/constants/gene';
 import { Maybe } from '@/interfaces/common';
 import { Gene, GeneTable, SelectedGene } from '@/interfaces/gene';
 import {
-  decodeGeneIdsFromQuery,
+  decodeGeneTableFromQuery,
   encodeGeneIdsToQuery,
 } from '@/utils/geneQuery';
 import { gaEvent } from '@/utils/googleAnalytics';
@@ -57,90 +52,28 @@ const ActionButtonsContainer = styled(Space)`
   margin: 1rem 0 2rem;
 `;
 
-const SpinPlaceholder = styled.div`
-  width: 100%;
-  height: 100vh;
-  min-height: 300px;
-`;
-
 const Footer = styled(Space)`
   width: 100%;
   padding: 3rem 0;
 `;
 
-const EMPTY_GENE_TABLE: GeneTable = [
-  [null, null, null],
-  [null, null, null],
-  [null, null, null],
-];
+interface HomePageServerSideProps {
+  allGenes: Gene[];
+  defaultGeneTable: GeneTable;
+  defaultCustomName: string;
+}
 
-function HomePage() {
+function HomePage({
+  allGenes,
+  defaultGeneTable,
+  defaultCustomName,
+}: HomePageServerSideProps) {
   const router = useRouter();
-  const [allGenes, setAllGenes] = useState<Gene[]>([]);
-  const [geneTable, setGeneTable] = useState(EMPTY_GENE_TABLE);
+  const [geneTable, setGeneTable] = useState(defaultGeneTable);
+  const [customName, setCustomName] = useState(defaultCustomName);
   const [selectedGene, setSelectedGene] = useState<SelectedGene | null>(null);
   const [hoveredGene, setHoveredGene] = useState<SelectedGene | null>(null);
   const [isBingoDrawerOpen, setIsBingoDrawerOpen] = useState(false);
-  const [customName, setCustomName] = useState('');
-
-  useEffect(() => {
-    const fetchGenesAndUpdateGeneTable = async () => {
-      const res = await fetch('/api/genes');
-
-      if (!res.ok) {
-        return;
-      }
-
-      const genes = await res.json();
-      setAllGenes(genes);
-    };
-
-    fetchGenesAndUpdateGeneTable();
-  }, []);
-
-  // parse selected geneIds and custom name from querystring
-  useEffect(() => {
-    const { g: geneQuery, n: customNameQuery } = router.query;
-
-    if (geneTable !== EMPTY_GENE_TABLE || allGenes.length === 0) {
-      return;
-    }
-
-    if (typeof geneQuery === 'string') {
-      const totalGenesAmount = EMPTY_GENE_TABLE.flat().length;
-      const tableColumnsAmount = EMPTY_GENE_TABLE[0].length;
-
-      const geneIds = decodeGeneIdsFromQuery(geneQuery, totalGenesAmount);
-
-      // reset url if the query is invalid
-      if (!geneIds) {
-        router.replace('/', undefined, { shallow: true });
-        return;
-      }
-
-      geneIds.forEach((geneId, index) => {
-        const validGene = allGenes.find(({ id }) => id === geneId);
-
-        if (!validGene) {
-          return;
-        }
-
-        setGeneTable((state) => {
-          const newGeneTable = new Array(...state);
-          const colIndex = index % tableColumnsAmount;
-          const rowIndex = Math.ceil((index + 1) / tableColumnsAmount) - 1;
-
-          newGeneTable[rowIndex][colIndex] = validGene;
-          return newGeneTable;
-        });
-      });
-    }
-
-    if (typeof customNameQuery === 'string') {
-      const decodedName = decodeURI(customNameQuery);
-      setCustomName(decodedName);
-    }
-  }, [allGenes, geneTable, router]);
 
   // -------------------------------------
   //   Handlers
@@ -150,6 +83,13 @@ function HomePage() {
     ({ target }: ChangeEvent<HTMLInputElement>) => {
       const inputValue = target.value;
       setCustomName(inputValue);
+    },
+    []
+  );
+
+  const handleCustomNameBlur = useCallback(
+    ({ target }: FocusEvent<HTMLInputElement>) => {
+      const inputValue = target.value;
 
       router.replace(
         {
@@ -159,15 +99,9 @@ function HomePage() {
         undefined,
         { shallow: true }
       );
+      gaEvent(GA_EVENT.SET_CUSTOM_NAME, { name: inputValue });
     },
     [router]
-  );
-
-  const handleCustomNameBlur = useCallback(
-    ({ target }: FocusEvent<HTMLInputElement>) => {
-      gaEvent(GA_EVENT.SET_CUSTOM_NAME, { name: target.value });
-    },
-    []
   );
 
   const handleGeneClick = useCallback((selectedGene: SelectedGene) => {
@@ -282,14 +216,6 @@ function HomePage() {
     () => ({ gutter: 16, xs: 1, sm: 1, md: 1, lg: 3, xl: 3, xxl: 3 }),
     []
   );
-
-  if (allGenes.length === 0) {
-    return (
-      <Spin size="large">
-        <SpinPlaceholder />
-      </Spin>
-    );
-  }
 
   return (
     <PageContainer>
@@ -425,5 +351,52 @@ function HomePage() {
     </PageContainer>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<HomePageServerSideProps> =
+  async ({ req, query }) => {
+    const protocol = req.headers['x-forwarded-proto'] || 'http';
+    const baseUrl = req ? `${protocol}://${req.headers.host}` : '';
+    const res = await fetch(`${baseUrl}/api/genes`);
+
+    if (!res.ok) {
+      return {
+        notFound: true,
+      };
+    }
+
+    const allGenes: Gene[] = await res.json();
+    const { g: geneQuery, n: customNameQuery } = query;
+    let defaultGeneTable = EMPTY_GENE_TABLE;
+    let defaultCustomName = '';
+
+    // parse selected geneIds from querystring
+    if (typeof geneQuery === 'string') {
+      const { table, valid } = decodeGeneTableFromQuery(geneQuery, allGenes);
+
+      if (!valid) {
+        return {
+          redirect: {
+            destination: '/',
+            permanent: false,
+          },
+        };
+      }
+
+      defaultGeneTable = table;
+    }
+
+    // parse custom name from querystring
+    if (typeof customNameQuery === 'string') {
+      defaultCustomName = decodeURI(customNameQuery);
+    }
+
+    return {
+      props: {
+        allGenes,
+        defaultGeneTable,
+        defaultCustomName,
+      },
+    };
+  };
 
 export default HomePage;
