@@ -13,6 +13,7 @@ import styled from 'styled-components';
 import { ATTACK_TYPE } from '@/constants/attackType';
 import { PRIMARY_BACKGROUND_COLOR, PRIMARY_COLOR } from '@/constants/common';
 import { GENE_TYPE } from '@/constants/gene';
+import { SKILL_TYPE } from '@/constants/skillType';
 import { Maybe } from '@/interfaces/common';
 import { Gene as IGene, GeneId } from '@/interfaces/gene';
 
@@ -20,6 +21,7 @@ import {
   ALL_TYPE,
   ATTACK_TYPE_OPTIONS,
   GENE_TYPE_OPTIONS,
+  SKILL_TYPE_OPTIONS,
   TABS,
 } from './constants';
 import GeneList from './GeneList';
@@ -98,6 +100,9 @@ const GeneSelectionModal: FC<Props> = ({
   const [filteredAttackType, setFilteredAttackType] = useState<
     ATTACK_TYPE | typeof ALL_TYPE
   >(ALL_TYPE);
+  const [filteredSkillType, setFilteredSkillType] = useState<
+    SKILL_TYPE | typeof ALL_TYPE
+  >(ALL_TYPE);
 
   const filteredGenesByTab = useMemo(() => {
     if (tabKey === ALL_TYPE) {
@@ -128,8 +133,19 @@ const GeneSelectionModal: FC<Props> = ({
           return true;
         }
         return gene.attackType === filteredAttackType;
+      })
+      .filter((gene) => {
+        if (filteredSkillType === ALL_TYPE) {
+          return true;
+        }
+        return gene.skillType === filteredSkillType;
       });
-  }, [filteredGenesByTab, filteredGeneType, filteredAttackType]);
+  }, [
+    filteredGenesByTab,
+    filteredGeneType,
+    filteredAttackType,
+    filteredSkillType,
+  ]);
 
   // Reset internal states
   useEffect(() => {
@@ -255,6 +271,17 @@ const GeneSelectionModal: FC<Props> = ({
                   ))}
                 </Select>
               )}
+              <Select value={filteredSkillType} onChange={setFilteredSkillType}>
+                <Select.Option value={ALL_TYPE}>全部技能</Select.Option>
+                {SKILL_TYPE_OPTIONS.map((option) => (
+                  <Select.Option
+                    key={`skill-type-filter-${option.key}`}
+                    value={option.key}
+                  >
+                    {option.label}
+                  </Select.Option>
+                ))}
+              </Select>
 
               <SearchInput
                 allowClear

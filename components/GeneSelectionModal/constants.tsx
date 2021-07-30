@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { ATTACK_TYPE, ATTACK_TYPE_DARK_ICON } from '@/constants/attackType';
 import { GENE_TYPE, GENE_TYPE_ICON } from '@/constants/gene';
+import { SKILL_TYPE } from '@/constants/skillType';
 
 const Label = styled.div`
   padding-right: 1rem;
@@ -156,6 +157,27 @@ export const ATTACK_TYPE_OPTIONS = [
       </Label>
     ),
     searchPlaceholder: '技巧基因',
+  },
+];
+
+export const SKILL_TYPE_OPTIONS = [
+  {
+    key: SKILL_TYPE.ACTIVE,
+    label: (
+      <Label>
+        <LabelText>主動技能</LabelText>
+      </Label>
+    ),
+    searchPlaceholder: '主動技能基因',
+  },
+  {
+    key: SKILL_TYPE.PASSIVE,
+    label: (
+      <Label>
+        <LabelText>被動技能</LabelText>
+      </Label>
+    ),
+    searchPlaceholder: '被動技能基因',
   },
 ];
 
