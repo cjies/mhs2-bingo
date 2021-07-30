@@ -57,6 +57,7 @@ const DraggingGene = styled(BingoGene)`
 interface Props {
   table: GeneTable;
   hoveredGene: Maybe<SelectedGene>;
+  forceShowGeneName: boolean;
   onGeneClick: (selectedGene: SelectedGene) => void;
   onGeneHover: (selectedGene: Maybe<SelectedGene>) => void;
   onTableSort: (table: GeneTable) => void;
@@ -65,6 +66,7 @@ interface Props {
 const Bingo: FC<Props> = ({
   table,
   hoveredGene,
+  forceShowGeneName,
   onGeneClick,
   onGeneHover,
   onTableSort,
@@ -197,6 +199,7 @@ const Bingo: FC<Props> = ({
 
             return (
               <DraggableGene
+                forceShowGeneName={forceShowGeneName}
                 key={geneKey}
                 gene={gene}
                 rowIndex={rowIndex}

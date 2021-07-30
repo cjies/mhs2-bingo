@@ -1,4 +1,10 @@
-import { GithubOutlined, SyncOutlined, TableOutlined } from '@ant-design/icons';
+import {
+  GithubOutlined,
+  PushpinFilled,
+  PushpinOutlined,
+  SyncOutlined,
+  TableOutlined,
+} from '@ant-design/icons';
 import { Button, Input, List, Space, Typography } from 'antd';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
@@ -78,6 +84,7 @@ function HomePage({
   const [selectedGene, setSelectedGene] = useState<SelectedGene | null>(null);
   const [hoveredGene, setHoveredGene] = useState<SelectedGene | null>(null);
   const [isBingoDrawerOpen, setIsBingoDrawerOpen] = useState(false);
+  const [forceShowGeneName, setForceShowGeneName] = useState(false);
 
   // -------------------------------------
   //   Handlers
@@ -180,6 +187,10 @@ function HomePage({
     setIsBingoDrawerOpen(false);
   }, []);
 
+  const handleForceShowGeneNameToggle = useCallback(() => {
+    setForceShowGeneName(!forceShowGeneName);
+  }, [forceShowGeneName]);
+
   // update the table by swapping the genes
   const handleGeneTableSort = useCallback(
     (newGeneTable: GeneTable) => {
@@ -273,6 +284,7 @@ function HomePage({
         <Bingo
           table={geneTable}
           hoveredGene={hoveredGene}
+          forceShowGeneName={forceShowGeneName}
           onGeneClick={handleGeneClick}
           onGeneHover={setHoveredGene}
           onTableSort={handleGeneTableSort}
@@ -280,6 +292,10 @@ function HomePage({
       </BingoContainer>
 
       <ActionButtonsContainer align="center">
+        <Button onClick={handleForceShowGeneNameToggle}>
+          {forceShowGeneName ? <PushpinOutlined /> : <PushpinFilled />}
+          {forceShowGeneName ? '隱藏名稱' : '顯示名稱'}
+        </Button>
         <Button onClick={handleBingoDrawerOpen}>
           <TableOutlined />
           賓果加成清單
