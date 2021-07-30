@@ -57,13 +57,17 @@ const Footer = styled(Space)`
   padding: 3rem 0;
 `;
 
+const DEFAULT_META_TITLE = '物語2 羈絆基因賓果模擬器';
+
 interface HomePageServerSideProps {
+  baseUrl: string;
   allGenes: Gene[];
   defaultGeneTable: GeneTable;
   defaultCustomName: string;
 }
 
 function HomePage({
+  baseUrl,
   allGenes,
   defaultGeneTable,
   defaultCustomName,
@@ -202,6 +206,25 @@ function HomePage({
   //   Render
   // -------------------------------------
 
+  // Meta data
+  const metaTitle = useMemo(
+    () =>
+      customName ? `${customName} - ${DEFAULT_META_TITLE}` : DEFAULT_META_TITLE,
+    [customName]
+  );
+  const metaDescription = useMemo(() => {
+    const geneNames = geneTable
+      .flat()
+      .map((gene) => gene?.name)
+      .filter(Boolean);
+
+    if (geneNames.length === 0) {
+      return '基因: --';
+    }
+
+    return `基因: ${geneNames.join(' | ')}`;
+  }, [geneTable]);
+
   const invalidGeneIds = useMemo(
     () =>
       geneTable
@@ -220,12 +243,18 @@ function HomePage({
   return (
     <PageContainer>
       <Head>
-        <title>
-          {customName
-            ? `${customName} - 物語2 羈絆基因賓果模擬器`
-            : '物語2 羈絆基因賓果模擬器'}
-        </title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta charSet="utf-8" />
+
+        <title>{metaTitle}</title>
+        <meta name="description" content={metaDescription} />
+        <meta property="og:title" content={metaTitle} />
+        <meta property="og:description" content={metaDescription} />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:image"
+          content={`${baseUrl}/images/empty-genes.png`}
+        />
       </Head>
 
       <CustomNameContainer>
@@ -392,6 +421,7 @@ export const getServerSideProps: GetServerSideProps<HomePageServerSideProps> =
 
     return {
       props: {
+        baseUrl,
         allGenes,
         defaultGeneTable,
         defaultCustomName,
