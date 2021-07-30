@@ -158,6 +158,15 @@ export const ATTACK_TYPE_OPTIONS = [
     ),
     searchPlaceholder: '技巧基因',
   },
+  {
+    key: ATTACK_TYPE.NONE,
+    label: (
+      <Label>
+        <LabelText>一般</LabelText>
+      </Label>
+    ),
+    searchPlaceholder: '一般基因',
+  },
 ];
 
 export const SKILL_TYPE_OPTIONS = [
