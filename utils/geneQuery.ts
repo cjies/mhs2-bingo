@@ -1,17 +1,17 @@
+import { decode, encodeURI } from 'js-base64';
+
 import { Maybe } from '@/interfaces/common';
 import { GeneId } from '@/interfaces/gene';
-
-import { b64ToString, stringToB64 } from './b64';
 
 const ID_SEPARATOR = ',';
 
 export function encodeGeneIdsToQuery(geneIds: Maybe<GeneId>[]): string | null {
   try {
-    const hashedGenes = stringToB64(geneIds.join(ID_SEPARATOR));
+    const hashedGenes = encodeURI(geneIds.join(ID_SEPARATOR));
 
     return hashedGenes;
   } catch (err) {
-    console.warn('invalid gene ids', err);
+    console.warn('failed to encode gene ids', err);
     return null;
   }
 }
@@ -21,7 +21,7 @@ export function decodeGeneIdsFromQuery(
   idsLength: number
 ): GeneId[] | null {
   try {
-    const geneIdsString = b64ToString(query);
+    const geneIdsString = decode(query);
     const geneIds = geneIdsString.split(ID_SEPARATOR);
 
     // invalid length
@@ -31,6 +31,7 @@ export function decodeGeneIdsFromQuery(
 
     return geneIds as GeneId[];
   } catch (err) {
+    console.warn('failed to decode gene ids', err);
     return null;
   }
 }
