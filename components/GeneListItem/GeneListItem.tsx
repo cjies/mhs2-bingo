@@ -1,8 +1,18 @@
 import { List } from 'antd';
-import { FC, memo, MouseEventHandler, useCallback, useMemo } from 'react';
+import {
+  FC,
+  memo,
+  MouseEvent,
+  MouseEventHandler,
+  useCallback,
+  useMemo,
+} from 'react';
 import styled, { css } from 'styled-components';
 
-import { PRIMARY_COLOR } from '@/constants/common';
+import {
+  PRIMARY_COLOR,
+  STOP_CLICK_PROPAGATION_CLASSNAME,
+} from '@/constants/common';
 import { Maybe } from '@/interfaces/common';
 import { Gene as IGene } from '@/interfaces/gene';
 
@@ -92,9 +102,23 @@ const GeneListItem: FC<Props> = ({
     );
   }, [gene]);
 
-  const handleItemClick = useCallback(() => {
-    onClick?.(selected ? null : gene);
-  }, [selected, gene, onClick]);
+  const handleItemClick = useCallback(
+    (e: MouseEvent<HTMLDivElement>) => {
+      const { className: targetClassName } = e.target as HTMLElement;
+
+      // dirty check to stop selecting the gene
+      if (
+        typeof targetClassName === 'string' &&
+        targetClassName.includes(STOP_CLICK_PROPAGATION_CLASSNAME)
+      ) {
+        e.stopPropagation();
+        return;
+      }
+
+      onClick?.(selected ? null : gene);
+    },
+    [selected, gene, onClick]
+  );
 
   return (
     <ListItem

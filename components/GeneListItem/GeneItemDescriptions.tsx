@@ -1,10 +1,15 @@
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { Descriptions, Tooltip } from 'antd';
 import Image from 'next/image';
-import { FC, memo, useMemo } from 'react';
+import { FC, memo, useMemo, useState } from 'react';
+import ShowMoreText from 'react-show-more-text';
 import styled from 'styled-components';
 
 import { ATTACK_TYPE, ATTACK_TYPE_DARK_ICON } from '@/constants/attackType';
+import {
+  SECONDARY_COLOR,
+  STOP_CLICK_PROPAGATION_CLASSNAME,
+} from '@/constants/common';
 import { GENE_TYPE, GENE_TYPE_ICON } from '@/constants/gene';
 import { SKILL_TYPE } from '@/constants/skillType';
 import { Maybe } from '@/interfaces/common';
@@ -13,6 +18,19 @@ import { Gene as IGene } from '@/interfaces/gene';
 const SkillName = styled.span`
   margin-left: 0.03rem;
   margin-right: 0.5rem;
+`;
+
+const MonsterList = styled.div`
+  width: 100%;
+
+  .show-more-anchor {
+    padding-left: 0.5rem;
+    color: ${SECONDARY_COLOR};
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 `;
 
 const ICON_SIZE = 16; // in pixels
@@ -28,6 +46,8 @@ interface Props {
 }
 
 const GeneItemDescriptions: FC<Props> = ({ gene }) => {
+  const [isMonsterListExpand, setIsMonsterListExpand] = useState(false);
+
   const {
     type,
     attackType,
@@ -104,7 +124,18 @@ const GeneItemDescriptions: FC<Props> = ({ gene }) => {
         {sp ? `${sp} / 100` : '-- / --'}
       </Descriptions.Item>
       <Descriptions.Item {...lastDescriptionItemProps} label="可持有隨行獸">
-        {(monsters || []).join(', ')}
+        <MonsterList>
+          <ShowMoreText
+            lines={1}
+            more="[展開]"
+            less="[收合]"
+            anchorClass={`show-more-anchor ${STOP_CLICK_PROPAGATION_CLASSNAME}`}
+            expanded={isMonsterListExpand}
+            onClick={setIsMonsterListExpand}
+          >
+            {(monsters || []).join(', ')}
+          </ShowMoreText>
+        </MonsterList>
       </Descriptions.Item>
     </Descriptions>
   );
