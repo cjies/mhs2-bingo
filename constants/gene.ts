@@ -23,12 +23,12 @@ export enum GENE_TYPE {
 }
 
 export const GENE_COLOR = {
-  [GENE_TYPE.NORMAL]: '#6f6f6f',
-  [GENE_TYPE.FIRE]: '#ff4802',
-  [GENE_TYPE.WATER]: '#4691a1',
-  [GENE_TYPE.THUNDER]: '#dbd115',
-  [GENE_TYPE.ICE]: '#afcceb',
-  [GENE_TYPE.DRAGON]: '#6b73b5',
+  [GENE_TYPE.NORMAL]: '#909090',
+  [GENE_TYPE.FIRE]: '#c50701',
+  [GENE_TYPE.WATER]: '#1f47a9',
+  [GENE_TYPE.THUNDER]: '#cab503',
+  [GENE_TYPE.ICE]: '#0ea8e4',
+  [GENE_TYPE.DRAGON]: '#9823c0',
   [GENE_TYPE.RAINBOW]:
     'conic-gradient(red, yellow, lime, aqua, blue, magenta, red)',
 };
@@ -55,7 +55,9 @@ export enum GENE_LEVEL {
 
 export const GENE_LEVEL_COLOR = {
   [GENE_LEVEL.S]: '#483517',
-  [GENE_LEVEL.M]: '#aaa9ad',
-  [GENE_LEVEL.L]: '#d4af37',
-  [GENE_LEVEL.XL]: '#a7d8de',
+  [GENE_LEVEL.M]: '#cacaca',
+  [GENE_LEVEL.L]:
+    'conic-gradient(#e3cd57, #ffeebe, #e3cd57, #ffeebe, #e3cd57, #ffeebe, #e3cd57)',
+  [GENE_LEVEL.XL]:
+    'conic-gradient(#88d4ec, #def7fc, #88d4ec, #def7fc, #88d4ec, #def7fc, #88d4ec)',
 };
