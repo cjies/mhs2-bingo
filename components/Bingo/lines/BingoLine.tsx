@@ -15,7 +15,8 @@ interface LineProps {
   $lineSize: number; // in rem
   $geneSize: number; // in rem
   $gapSize: number; // in rem
-  $match: boolean;
+  $isGeneTypeMatch: boolean;
+  $isAttackTypeMatch: boolean;
 }
 
 const Line = styled.div<LineProps>`
@@ -25,8 +26,36 @@ const Line = styled.div<LineProps>`
   border-radius: 0.25rem;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
   background-color: ${(props) =>
-    props.$match ? GENE_BORDER_COLOR_MATCH : GENE_BORDER_COLOR};
+    props.$isGeneTypeMatch || props.$isAttackTypeMatch
+      ? GENE_BORDER_COLOR_MATCH
+      : GENE_BORDER_COLOR};
   transition: background-color 0.2s ease;
+  pointer-events: none;
+
+  &::before {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 12%;
+    left: -10%;
+    background-color: ${GENE_BORDER_COLOR_MATCH};
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+
+    display: ${(props) => (props.$isGeneTypeMatch ? 'inline-block' : 'none')};
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 12%;
+    right: -10%;
+    z-index: -1;
+    background-color: ${GENE_BORDER_COLOR_MATCH};
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+
+    display: ${(props) => (props.$isAttackTypeMatch ? 'inline-block' : 'none')};
+  }
 `;
 
 interface IndicatorProps {
@@ -38,6 +67,7 @@ export const Indicator = styled.div<IndicatorProps>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  pointer-events: none;
 
   position: absolute;
   top: 50%;
@@ -46,6 +76,7 @@ export const Indicator = styled.div<IndicatorProps>`
   height: ${(props) => props.$lineSize * 2}rem;
   border-radius: 50%;
   background-color: ${GENE_BORDER_COLOR_MATCH};
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
 `;
 
 const MatchedAttackTypeIndicator = styled(Indicator)`
@@ -75,8 +106,6 @@ const BingoLine: FC<Props> = ({
   matchedGeneType,
   matchedAttackType,
 }) => {
-  const isMatch = !!(matchedGeneType || matchedAttackType);
-
   // convert rem to pixels
   const iconSize = lineSize * 1.5 * DEFAULT_FONT_SIZE;
 
@@ -86,7 +115,8 @@ const BingoLine: FC<Props> = ({
       $lineSize={lineSize}
       $geneSize={geneSize}
       $gapSize={gapSize}
-      $match={isMatch}
+      $isGeneTypeMatch={!!matchedGeneType}
+      $isAttackTypeMatch={!!matchedAttackType}
     >
       {!!(matchedAttackType && matchedAttackType !== ATTACK_TYPE.NONE) && (
         <MatchedAttackTypeIndicator $lineSize={lineSize} $gapSize={gapSize}>
