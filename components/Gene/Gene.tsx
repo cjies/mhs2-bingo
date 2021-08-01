@@ -42,7 +42,7 @@ const Gene = forwardRef<HTMLDivElement, Props>(
     ref
   ) => {
     const attackTypeIcon = ATTACK_TYPE_LIGHT_ICON[attackType];
-    const iconSize = (size * DEFAULT_FONT_SIZE) / 1.8; // rem -> px
+    const iconSize = (size * DEFAULT_FONT_SIZE) / 2; // rem -> px
     const borderColor = geneLevel
       ? GENE_LEVEL_COLOR[geneLevel]
       : GENE_LEVEL_COLOR.S;

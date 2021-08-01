@@ -50,7 +50,6 @@ const Line = styled.div<LineProps>`
     height: 100%;
     width: 12%;
     right: -10%;
-    z-index: -1;
     background-color: ${GENE_BORDER_COLOR_MATCH};
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
 
@@ -68,6 +67,7 @@ export const Indicator = styled.div<IndicatorProps>`
   align-items: center;
   justify-content: center;
   pointer-events: none;
+  z-index: 1;
 
   position: absolute;
   top: 50%;
