@@ -8,6 +8,7 @@ import { ATTACK_TYPE } from '@/constants/attackType';
 import { GENE_LEVEL, GENE_TYPE } from '@/constants/gene';
 import { SKILL_TYPE } from '@/constants/skillType';
 import { Gene, GeneId } from '@/interfaces/gene';
+import { Monster } from '@/interfaces/monster';
 
 const CSV_PATH = {
   [GENE_TYPE.RAINBOW]: 'csv/rainbow.csv',
@@ -79,22 +80,50 @@ const fetchGenesByType = async (geneType: GENE_TYPE): Promise<Gene[]> => {
       skillDescription: data['技能詳情'],
       minLevel: +data['所需等級'] ?? 0,
       sp: +data['消耗羈絆值'] || 0,
-      monsters: data['可持有隨行獸'].split('、'),
+      monsters: data['可持有隨行獸'].split(/\n|、/).map((m) => m.trim()),
     };
 
     return gene;
   });
 };
 
+const BLACKLIST_MONSTERS = ['', '-', '136', '138', '139'];
+
+const getMonsterList = (genes: Gene[]) => {
+  const monstersMap = genes.reduce<Record<string, string>>(
+    (map, { monsters }) => {
+      monsters.forEach((monster) => {
+        const monsterId = shortHash(monster);
+        if (!map[monsterId] && !BLACKLIST_MONSTERS.includes(monster)) {
+          map[monsterId] = monster;
+        }
+      });
+
+      return map;
+    },
+    {}
+  );
+
+  return Object.entries(monstersMap).map(
+    ([id, name]) => ({ id, name } as Monster)
+  );
+};
+
+interface ResponseData {
+  genes: Gene[];
+  monsters: Monster[];
+}
+
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Gene[]>
+  res: NextApiResponse<ResponseData>
 ) {
   try {
     const geneTypes = Object.keys(GENE_TYPE) as GENE_TYPE[];
     const genes = (await Promise.all(geneTypes.map(fetchGenesByType))).flat();
+    const monsters = getMonsterList(genes);
 
-    res.status(200).json(genes);
+    res.status(200).json({ genes, monsters });
   } catch (err) {
     console.error(err);
     res.status(500).json(err);

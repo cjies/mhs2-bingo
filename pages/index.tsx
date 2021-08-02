@@ -5,7 +5,7 @@ import {
   SyncOutlined,
   TableOutlined,
 } from '@ant-design/icons';
-import { Button, Input, List, Space, Typography } from 'antd';
+import { Button, List, Space, Typography } from 'antd';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -13,6 +13,7 @@ import { ChangeEvent, FocusEvent, useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import Bingo from '@/components/Bingo';
+import BingoHeader from '@/components/BingoHeader';
 import BingoTableDrawer from '@/components/BingoTableDrawer';
 import GeneListItem from '@/components/GeneListItem';
 import GeneSelectionModal from '@/components/GeneSelectionModal';
@@ -20,6 +21,7 @@ import { GA_EVENT } from '@/constants/gaEventName';
 import { EMPTY_GENE_TABLE } from '@/constants/gene';
 import { Maybe } from '@/interfaces/common';
 import { Gene, GeneTable, SelectedGene } from '@/interfaces/gene';
+import { Monster, MonsterId } from '@/interfaces/monster';
 import {
   decodeGeneTableFromQuery,
   encodeGeneIdsToQuery,
@@ -31,19 +33,6 @@ const { Text, Link } = Typography;
 const PageContainer = styled.div`
   width: 90%;
   margin: 0 auto;
-`;
-
-const CustomNameContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  padding: 1rem 2rem 0;
-`;
-
-const CustomNameInput = styled(Input)`
-  width: 18.75rem;
-  text-align: center;
-  font-size: 2.5rem;
-  font-weight: bold;
 `;
 
 const BingoContainer = styled.div`
@@ -68,19 +57,24 @@ const DEFAULT_META_TITLE = '物語2 羈絆基因賓果模擬器';
 interface HomePageServerSideProps {
   baseUrl: string;
   allGenes: Gene[];
+  allMonsters: Monster[];
   defaultGeneTable: GeneTable;
   defaultCustomName: string;
+  defaultMonsterId: MonsterId | null;
 }
 
 function HomePage({
   baseUrl,
   allGenes,
+  allMonsters,
   defaultGeneTable,
   defaultCustomName,
+  defaultMonsterId,
 }: HomePageServerSideProps) {
   const router = useRouter();
   const [geneTable, setGeneTable] = useState(defaultGeneTable);
   const [customName, setCustomName] = useState(defaultCustomName);
+  const [monsterId, setMonsterId] = useState(defaultMonsterId);
   const [selectedGene, setSelectedGene] = useState<SelectedGene | null>(null);
   const [hoveredGene, setHoveredGene] = useState<SelectedGene | null>(null);
   const [isBingoDrawerOpen, setIsBingoDrawerOpen] = useState(false);
@@ -111,6 +105,23 @@ function HomePage({
         { shallow: true }
       );
       gaEvent(GA_EVENT.SET_CUSTOM_NAME, { name: inputValue });
+    },
+    [router]
+  );
+
+  const handleMonsterChange = useCallback(
+    (newMonsterId: MonsterId) => {
+      setMonsterId(newMonsterId);
+
+      router.replace(
+        {
+          pathname: '/',
+          query: { ...router.query, m: encodeURI(newMonsterId) },
+        },
+        undefined,
+        { shallow: true }
+      );
+      gaEvent(GA_EVENT.SET_MONSTER, { monster: newMonsterId });
     },
     [router]
   );
@@ -268,17 +279,14 @@ function HomePage({
         />
       </Head>
 
-      <CustomNameContainer>
-        <CustomNameInput
-          size="large"
-          placeholder="客製化名稱"
-          bordered={false}
-          maxLength={15}
-          value={customName}
-          onChange={handleCustomNameChange}
-          onBlur={handleCustomNameBlur}
-        />
-      </CustomNameContainer>
+      <BingoHeader
+        customName={customName}
+        monsters={allMonsters}
+        monsterId={monsterId}
+        onCustomNameChange={handleCustomNameChange}
+        onCustomNameBlur={handleCustomNameBlur}
+        onMonsterChange={handleMonsterChange}
+      />
 
       <BingoContainer>
         <Bingo
@@ -401,7 +409,7 @@ export const getServerSideProps: GetServerSideProps<HomePageServerSideProps> =
   async ({ req, query }) => {
     const protocol = req.headers['x-forwarded-proto'] || 'http';
     const baseUrl = req ? `${protocol}://${req.headers.host}` : '';
-    const res = await fetch(`${baseUrl}/api/genes`);
+    const res = await fetch(`${baseUrl}/api/data`);
 
     if (!res.ok) {
       return {
@@ -409,10 +417,14 @@ export const getServerSideProps: GetServerSideProps<HomePageServerSideProps> =
       };
     }
 
-    const allGenes: Gene[] = await res.json();
-    const { g: geneQuery, n: customNameQuery } = query;
+    const {
+      genes: allGenes,
+      monsters: allMonsters,
+    }: { genes: Gene[]; monsters: Monster[] } = await res.json();
+    const { g: geneQuery, n: customNameQuery, m: monsterIdQuery } = query;
     let defaultGeneTable = EMPTY_GENE_TABLE;
     let defaultCustomName = '';
+    let defaultMonsterId: MonsterId | null = null;
 
     // parse selected geneIds from querystring
     if (typeof geneQuery === 'string') {
@@ -435,12 +447,19 @@ export const getServerSideProps: GetServerSideProps<HomePageServerSideProps> =
       defaultCustomName = decodeURI(customNameQuery);
     }
 
+    // parse monster from querystring
+    if (typeof monsterIdQuery === 'string') {
+      defaultMonsterId = decodeURI(monsterIdQuery) as MonsterId;
+    }
+
     return {
       props: {
         baseUrl,
         allGenes,
+        allMonsters,
         defaultGeneTable,
         defaultCustomName,
+        defaultMonsterId,
       },
     };
   };

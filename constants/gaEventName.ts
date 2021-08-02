@@ -6,4 +6,5 @@ export enum GA_EVENT {
   CLICK_LIST_ITEM = 'click_list_item',
   VIEW_BINGO_DRAWER = 'view_bingo_drawer',
   SET_CUSTOM_NAME = 'set_custom_name',
+  SET_MONSTER = 'set_monster',
 }
