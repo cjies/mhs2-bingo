@@ -23,7 +23,7 @@ const GlobalStyle = createGlobalStyle`
     font-size: ${DEFAULT_FONT_SIZE}px;
 
     background-color: ${PRIMARY_BACKGROUND_COLOR};
-    background-image: url('https://i.imgur.com/4rKVgAQ.png');
+    background-image: url('/images/background.png');
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
