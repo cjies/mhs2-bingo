@@ -1,10 +1,4 @@
 import { GeneTable } from '@/interfaces/gene';
-import dragonTypeIcon from '@/public/images/dragon-type.png';
-import fireTypeIcon from '@/public/images/fire-type.png';
-import iceTypeIcon from '@/public/images/ice-type.png';
-import normalTypeIcon from '@/public/images/normal-type.png';
-import thunderTypeIcon from '@/public/images/thunder-type.png';
-import waterTypeIcon from '@/public/images/water-type.png';
 
 export const EMPTY_GENE_TABLE: GeneTable = [
   [null, null, null],
@@ -38,12 +32,12 @@ export const GENE_BORDER_COLOR = '#483517';
 export const GENE_BORDER_COLOR_MATCH = '#fff';
 
 export const GENE_TYPE_ICON = {
-  [GENE_TYPE.NORMAL]: normalTypeIcon,
-  [GENE_TYPE.FIRE]: fireTypeIcon,
-  [GENE_TYPE.WATER]: waterTypeIcon,
-  [GENE_TYPE.THUNDER]: thunderTypeIcon,
-  [GENE_TYPE.ICE]: iceTypeIcon,
-  [GENE_TYPE.DRAGON]: dragonTypeIcon,
+  [GENE_TYPE.NORMAL]: '/images/normal-type.png',
+  [GENE_TYPE.FIRE]: '/images/fire-type.png',
+  [GENE_TYPE.WATER]: '/images/water-type.png',
+  [GENE_TYPE.THUNDER]: '/images/thunder-type.png',
+  [GENE_TYPE.ICE]: '/images/ice-type.png',
+  [GENE_TYPE.DRAGON]: '/images/dragon-type.png',
 } as const;
 
 export enum GENE_LEVEL {

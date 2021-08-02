@@ -23,7 +23,7 @@ const GlobalStyle = createGlobalStyle`
     font-size: ${DEFAULT_FONT_SIZE}px;
 
     background-color: ${PRIMARY_BACKGROUND_COLOR};
-    background-image: url('https://i.imgur.com/4rKVgAQ.png');
+    background-image: url('/images/background.png');
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
@@ -61,7 +61,12 @@ function MyApp({ Component, pageProps }: AppProps) {
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1"
         />
-        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link
+          key="favicon"
+          rel="icon"
+          type="image/x-icon"
+          href="/favicon.ico"
+        />
 
         {/* Global site tag (gtag.js) - Google Analytics */}
         <GoogleAnalytics />
