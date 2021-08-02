@@ -9,7 +9,7 @@ import { Button, List, Space, Typography } from 'antd';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { ChangeEvent, FocusEvent, useCallback, useMemo, useState } from 'react';
+import { FocusEvent, useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import Bingo from '@/components/Bingo';
@@ -84,14 +84,6 @@ function HomePage({
   //   Handlers
   // -------------------------------------
 
-  const handleCustomNameChange = useCallback(
-    ({ target }: ChangeEvent<HTMLInputElement>) => {
-      const inputValue = target.value;
-      setCustomName(inputValue);
-    },
-    []
-  );
-
   const handleCustomNameBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => {
       const inputValue = target.value;
@@ -109,7 +101,7 @@ function HomePage({
     [router]
   );
 
-  const handleMonsterChange = useCallback(
+  const handleMonsterIdChange = useCallback(
     (newMonsterId: MonsterId) => {
       setMonsterId(newMonsterId);
 
@@ -283,9 +275,9 @@ function HomePage({
         customName={customName}
         monsters={allMonsters}
         monsterId={monsterId}
-        onCustomNameChange={handleCustomNameChange}
+        onMonsterIdChange={handleMonsterIdChange}
+        onCustomNameChange={setCustomName}
         onCustomNameBlur={handleCustomNameBlur}
-        onMonsterChange={handleMonsterChange}
       />
 
       <BingoContainer>
