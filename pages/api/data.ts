@@ -87,7 +87,27 @@ const fetchGenesByType = async (geneType: GENE_TYPE): Promise<Gene[]> => {
   });
 };
 
-const BLACKLIST_MONSTERS = ['', '-', '136', '138', '139'];
+const BLACKLIST_MONSTERS = [
+  '',
+  '-',
+  '136',
+  '138',
+  '139',
+  '強鳥',
+  '搔鳥', // duplicated
+  '鏖魔角龍', // duplicated
+  '鷹魔角龍', // duplicated
+  '冰咒龍', // duplicated
+  '白猿孤', // duplicated
+  '沙龍王', // duplicated
+  '白疾風迅龍', // duplicated
+  '荒鉤爪轟龍', // duplicated
+  '爆槌龍', // duplicated
+  '黑鎧', // duplicated
+  '雷龍', // duplicated
+  '雄火龍', // duplicated
+  '紅速龍王', // duplicated
+];
 
 const getMonsterList = (genes: Gene[]) => {
   const monstersMap = genes.reduce<Record<string, string>>(
