@@ -213,6 +213,7 @@ function HomePage({
     router.push('/', undefined);
     setGeneTable(newGeneTable);
     setCustomName('');
+    setMonsterId(null);
     gaEvent(GA_EVENT.RESET_TABLE);
   }, [router]);
 
