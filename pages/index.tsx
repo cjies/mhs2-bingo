@@ -220,6 +220,11 @@ function HomePage({
   //   Render
   // -------------------------------------
 
+  const customMonsterIcon = useMemo(() => {
+    const monster = allMonsters.find(({ id }) => id === monsterId);
+    return monster?.icon ?? null;
+  }, [allMonsters, monsterId]);
+
   // Meta data
   const metaTitle = useMemo(
     () =>
@@ -269,6 +274,16 @@ function HomePage({
           property="og:image"
           content={`${baseUrl}/images/empty-genes.png`}
         />
+
+        {/* Custom monster favicon */}
+        {customMonsterIcon && (
+          <link
+            key="favicon"
+            rel="icon"
+            type="image/x-icon"
+            href={customMonsterIcon}
+          />
+        )}
       </Head>
 
       <BingoHeader

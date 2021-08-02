@@ -10,7 +10,7 @@ import {
 } from 'react';
 import styled from 'styled-components';
 
-import { DEFAULT_MONSTER_ICON, MONSTER_ICON } from '@/constants/monster';
+import { DEFAULT_MONSTER_ICON } from '@/constants/monster';
 import { Monster, MonsterId } from '@/interfaces/monster';
 
 const Header = styled.div<{ $maxWidth: string }>`
@@ -44,7 +44,7 @@ const CustomNameInput = styled(Input)`
 const DEFAULT_MONSTER_OPTION = {
   id: '0',
   name: '未知',
-  imgSrc: DEFAULT_MONSTER_ICON,
+  icon: DEFAULT_MONSTER_ICON,
 };
 
 interface Props {
@@ -77,11 +77,7 @@ const BingoHeader: FC<Props> = ({
   }, [monsterId, monsters]);
 
   const monsterOptions = useMemo(() => {
-    const options = monsters.map((monster) => ({
-      ...monster,
-      imgSrc: MONSTER_ICON[monster.name] || DEFAULT_MONSTER_ICON,
-    }));
-    return [DEFAULT_MONSTER_OPTION, ...options];
+    return [DEFAULT_MONSTER_OPTION, ...monsters];
   }, [monsters]);
 
   const handleCustomNameChange = useCallback(
@@ -131,11 +127,11 @@ const BingoHeader: FC<Props> = ({
             key={option.id}
             value={option.id}
             label={
-              <Image src={option.imgSrc} width={40} height={40} alt="icon" />
+              <Image src={option.icon} width={40} height={40} alt="icon" />
             }
           >
             <OptionText>
-              <Image src={option.imgSrc} width={20} height={20} alt="icon" />
+              <Image src={option.icon} width={20} height={20} alt="icon" />
               <span>{option.name}</span>
             </OptionText>
           </Select.Option>

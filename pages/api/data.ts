@@ -6,9 +6,10 @@ import shortHash from 'shorthash2';
 
 import { ATTACK_TYPE } from '@/constants/attackType';
 import { GENE_LEVEL, GENE_TYPE } from '@/constants/gene';
+import { DEFAULT_MONSTER_ICON, MONSTER_ICON } from '@/constants/monster';
 import { SKILL_TYPE } from '@/constants/skillType';
 import { Gene, GeneId } from '@/interfaces/gene';
-import { Monster } from '@/interfaces/monster';
+import { Monster, MonsterId } from '@/interfaces/monster';
 
 const CSV_PATH = {
   [GENE_TYPE.RAINBOW]: 'csv/rainbow.csv',
@@ -124,9 +125,11 @@ const getMonsterList = (genes: Gene[]) => {
     {}
   );
 
-  return Object.entries(monstersMap).map(
-    ([id, name]) => ({ id, name } as Monster)
-  );
+  return Object.entries(monstersMap).map(([id, name]) => ({
+    id: id as MonsterId,
+    name,
+    icon: MONSTER_ICON[name] || DEFAULT_MONSTER_ICON,
+  }));
 };
 
 interface ResponseData {

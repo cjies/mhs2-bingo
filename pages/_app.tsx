@@ -61,7 +61,12 @@ function MyApp({ Component, pageProps }: AppProps) {
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1"
         />
-        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link
+          key="favicon"
+          rel="icon"
+          type="image/x-icon"
+          href="/favicon.ico"
+        />
 
         {/* Global site tag (gtag.js) - Google Analytics */}
         <GoogleAnalytics />
