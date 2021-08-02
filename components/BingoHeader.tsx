@@ -37,7 +37,7 @@ const OptionText = styled.div`
 `;
 
 const CustomNameInput = styled(Input)`
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: bold;
 `;
 
