@@ -10,7 +10,7 @@ import {
 } from 'react';
 import styled from 'styled-components';
 
-import { DEFAULT_MONSTER_ICON } from '@/constants/monster';
+import { UNKNOWN_MONSTER } from '@/constants/monster';
 import { Monster, MonsterId } from '@/interfaces/monster';
 
 const Header = styled.div<{ $maxWidth: string }>`
@@ -41,17 +41,11 @@ const CustomNameInput = styled(Input)`
   font-weight: bold;
 `;
 
-const DEFAULT_MONSTER_OPTION = {
-  id: '0',
-  name: '未知',
-  icon: DEFAULT_MONSTER_ICON,
-};
-
 interface Props {
   customName: string;
   monsters: Monster[];
   monsterId: MonsterId | null;
-  onMonsterIdChange: (monsterId: MonsterId) => void;
+  onMonsterChange: (monsterId: MonsterId, customName: string) => void;
   onCustomNameChange: (customName: string) => void;
   onCustomNameBlur: FocusEventHandler<HTMLInputElement>;
 }
@@ -60,7 +54,7 @@ const BingoHeader: FC<Props> = ({
   customName,
   monsters,
   monsterId,
-  onMonsterIdChange,
+  onMonsterChange,
   onCustomNameChange,
   onCustomNameBlur,
 }) => {
@@ -68,16 +62,16 @@ const BingoHeader: FC<Props> = ({
 
   const selectedMonsterId = useMemo(() => {
     if (!monsterId) {
-      return DEFAULT_MONSTER_OPTION.id;
+      return UNKNOWN_MONSTER.id;
     }
 
     // check if it valid
     const validMonster = monsters.some(({ id }) => id === monsterId);
-    return validMonster ? monsterId : DEFAULT_MONSTER_OPTION.id;
+    return validMonster ? monsterId : UNKNOWN_MONSTER.id;
   }, [monsterId, monsters]);
 
   const monsterOptions = useMemo(() => {
-    return [DEFAULT_MONSTER_OPTION, ...monsters];
+    return [UNKNOWN_MONSTER, ...monsters];
   }, [monsters]);
 
   const handleCustomNameChange = useCallback(
@@ -88,18 +82,19 @@ const BingoHeader: FC<Props> = ({
     [onCustomNameChange]
   );
 
-  const handleMonsterIdChange = useCallback(
+  const handleMonsterChange = useCallback(
     (newMonsterId) => {
       // Replace custom name if empty or same to old monster name
       const oldMonster = monsters.find(({ id }) => id === monsterId);
       const newMonster = monsters.find(({ id }) => id === newMonsterId);
-      if (!customName || customName === oldMonster?.name) {
-        onCustomNameChange(newMonster?.name ?? '');
-      }
+      const newCustomName =
+        !customName || customName === oldMonster?.name
+          ? newMonster?.name ?? ''
+          : '';
 
-      onMonsterIdChange(newMonsterId);
+      onMonsterChange(newMonsterId, newCustomName);
     },
-    [monsters, monsterId, customName, onCustomNameChange, onMonsterIdChange]
+    [monsters, monsterId, customName, onMonsterChange]
   );
 
   return (
@@ -120,7 +115,7 @@ const BingoHeader: FC<Props> = ({
         bordered={false}
         dropdownMatchSelectWidth={false}
         value={selectedMonsterId}
-        onChange={handleMonsterIdChange}
+        onChange={handleMonsterChange}
       >
         {monsterOptions.map((option) => (
           <Select.Option

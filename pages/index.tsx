@@ -19,6 +19,7 @@ import GeneListItem from '@/components/GeneListItem';
 import GeneSelectionModal from '@/components/GeneSelectionModal';
 import { GA_EVENT } from '@/constants/gaEventName';
 import { EMPTY_GENE_TABLE } from '@/constants/gene';
+import { ApiResponseData } from '@/interfaces/api';
 import { Maybe } from '@/interfaces/common';
 import { Gene, GeneTable, SelectedGene } from '@/interfaces/gene';
 import { Monster, MonsterId } from '@/interfaces/monster';
@@ -101,14 +102,19 @@ function HomePage({
     [router]
   );
 
-  const handleMonsterIdChange = useCallback(
-    (newMonsterId: MonsterId) => {
+  const handleMonsterChange = useCallback(
+    (newMonsterId: MonsterId, newCustomName: string) => {
       setMonsterId(newMonsterId);
+      setCustomName(newCustomName);
 
       router.replace(
         {
           pathname: '/',
-          query: { ...router.query, m: encodeURI(newMonsterId) },
+          query: {
+            ...router.query,
+            m: encodeURI(newMonsterId),
+            n: encodeURI(newCustomName),
+          },
         },
         undefined,
         { shallow: true }
@@ -291,7 +297,7 @@ function HomePage({
         customName={customName}
         monsters={allMonsters}
         monsterId={monsterId}
-        onMonsterIdChange={handleMonsterIdChange}
+        onMonsterChange={handleMonsterChange}
         onCustomNameChange={setCustomName}
         onCustomNameBlur={handleCustomNameBlur}
       />
@@ -425,10 +431,8 @@ export const getServerSideProps: GetServerSideProps<HomePageServerSideProps> =
       };
     }
 
-    const {
-      genes: allGenes,
-      monsters: allMonsters,
-    }: { genes: Gene[]; monsters: Monster[] } = await res.json();
+    const { genes: allGenes, monsters: allMonsters }: ApiResponseData =
+      await res.json();
     const { g: geneQuery, n: customNameQuery, m: monsterIdQuery } = query;
     let defaultGeneTable = EMPTY_GENE_TABLE;
     let defaultCustomName = '';

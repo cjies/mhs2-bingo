@@ -6,10 +6,11 @@ import shortHash from 'shorthash2';
 
 import { ATTACK_TYPE } from '@/constants/attackType';
 import { GENE_LEVEL, GENE_TYPE } from '@/constants/gene';
-import { DEFAULT_MONSTER_ICON, MONSTER_ICON } from '@/constants/monster';
+import { MONSTERS } from '@/constants/monster';
 import { SKILL_TYPE } from '@/constants/skillType';
+import { ApiResponseData } from '@/interfaces/api';
 import { Gene, GeneId } from '@/interfaces/gene';
-import { Monster, MonsterId } from '@/interfaces/monster';
+import { MonsterId } from '@/interfaces/monster';
 
 const CSV_PATH = {
   [GENE_TYPE.RAINBOW]: 'csv/rainbow.csv',
@@ -88,63 +89,18 @@ const fetchGenesByType = async (geneType: GENE_TYPE): Promise<Gene[]> => {
   });
 };
 
-const BLACKLIST_MONSTERS = [
-  '',
-  '-',
-  '136',
-  '138',
-  '139',
-  '強鳥',
-  '搔鳥', // duplicated
-  '鏖魔角龍', // duplicated
-  '鷹魔角龍', // duplicated
-  '冰咒龍', // duplicated
-  '白猿孤', // duplicated
-  '沙龍王', // duplicated
-  '白疾風迅龍', // duplicated
-  '荒鉤爪轟龍', // duplicated
-  '爆槌龍', // duplicated
-  '黑鎧', // duplicated
-  '雷龍', // duplicated
-  '雄火龍', // duplicated
-  '紅速龍王', // duplicated
-];
-
-const getMonsterList = (genes: Gene[]) => {
-  const monstersMap = genes.reduce<Record<string, string>>(
-    (map, { monsters }) => {
-      monsters.forEach((monster) => {
-        const monsterId = shortHash(monster);
-        if (!map[monsterId] && !BLACKLIST_MONSTERS.includes(monster)) {
-          map[monsterId] = monster;
-        }
-      });
-
-      return map;
-    },
-    {}
-  );
-
-  return Object.entries(monstersMap).map(([id, name]) => ({
-    id: id as MonsterId,
-    name,
-    icon: MONSTER_ICON[name] || DEFAULT_MONSTER_ICON,
-  }));
-};
-
-interface ResponseData {
-  genes: Gene[];
-  monsters: Monster[];
-}
-
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
+  res: NextApiResponse<ApiResponseData>
 ) {
   try {
     const geneTypes = Object.keys(GENE_TYPE) as GENE_TYPE[];
     const genes = (await Promise.all(geneTypes.map(fetchGenesByType))).flat();
-    const monsters = getMonsterList(genes);
+
+    const monsters = MONSTERS.map(({ name, icon }) => {
+      const monsterId = shortHash(name) as MonsterId;
+      return { id: monsterId, name, icon };
+    });
 
     res.status(200).json({ genes, monsters });
   } catch (err) {
