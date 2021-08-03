@@ -90,7 +90,7 @@ const BingoHeader: FC<Props> = ({
       const newCustomName =
         !customName || customName === oldMonster?.name
           ? newMonster?.name ?? ''
-          : '';
+          : customName;
 
       onMonsterChange(newMonsterId, newCustomName);
     },
