@@ -4,6 +4,7 @@ import {
   memo,
   MouseEvent,
   MouseEventHandler,
+  ReactNode,
   useCallback,
   useMemo,
 } from 'react';
@@ -19,7 +20,9 @@ import { Gene as IGene } from '@/interfaces/gene';
 import Gene, { EmptyGene } from '../Gene';
 import GeneItemDescriptions from './GeneItemDescriptions';
 
-const ListItem = styled(List.Item)<{ $disabled?: boolean }>`
+const ListItem = styled(List.Item)<{ $disabled?: boolean; $pinned?: boolean }>`
+  position: relative;
+
   ${(props) =>
     props.onClick
       ? css`
@@ -32,6 +35,22 @@ const ListItem = styled(List.Item)<{ $disabled?: boolean }>`
     css`
       opacity: 0.6;
       pointer-events: none;
+    `}
+
+  ${(props) =>
+    props.$pinned &&
+    css`
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 0.5rem;
+        background-color: rgba(0, 0, 0, 0.3);
+        pointer-events: none;
+      }
     `}
 `;
 
@@ -69,6 +88,7 @@ interface Props {
   selected?: boolean;
   disabled?: boolean;
   hovered?: boolean;
+  children?: ReactNode;
   onClick?: (gene: Maybe<IGene>) => void;
   onMouseEnter?: MouseEventHandler<HTMLDivElement>;
   onMouseLeave?: MouseEventHandler<HTMLDivElement>;
@@ -79,6 +99,7 @@ const GeneListItem: FC<Props> = ({
   selected,
   disabled,
   hovered,
+  children,
   onClick,
   onMouseEnter,
   onMouseLeave,
@@ -123,6 +144,7 @@ const GeneListItem: FC<Props> = ({
   return (
     <ListItem
       $disabled={disabled}
+      $pinned={gene?.pinned}
       onClick={handleItemClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -134,6 +156,7 @@ const GeneListItem: FC<Props> = ({
         title={gene?.name ?? '--'}
         description={<GeneItemDescriptions gene={gene} />}
       />
+      {children}
     </ListItem>
   );
 };

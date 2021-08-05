@@ -9,7 +9,7 @@ import { Button, List, Space, Typography } from 'antd';
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { FocusEvent, useCallback, useMemo, useState } from 'react';
+import React, { FocusEvent, useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import Bingo from '@/components/Bingo';
@@ -17,6 +17,7 @@ import BingoHeader from '@/components/BingoHeader';
 import BingoTableDrawer from '@/components/BingoTableDrawer';
 import GeneListItem from '@/components/GeneListItem';
 import GeneSelectionModal from '@/components/GeneSelectionModal';
+import { STOP_CLICK_PROPAGATION_CLASSNAME } from '@/constants/common';
 import { GA_EVENT } from '@/constants/gaEventName';
 import { EMPTY_GENE_TABLE } from '@/constants/gene';
 import { ApiResponseData } from '@/interfaces/api';
@@ -46,6 +47,16 @@ const ActionButtonsContainer = styled(Space)`
   display: flex;
   justify-content: center;
   margin: 1rem 0 2rem;
+`;
+
+const ListItemPinButton = styled(Button)`
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+
+  > span {
+    pointer-events: none;
+  }
 `;
 
 const Footer = styled(Space)`
@@ -315,7 +326,7 @@ function HomePage({
 
       <ActionButtonsContainer align="center">
         <Button onClick={handleForceShowGeneNameToggle}>
-          {forceShowGeneName ? <PushpinOutlined /> : <PushpinFilled />}
+          {forceShowGeneName ? <PushpinFilled /> : <PushpinOutlined />}
           {forceShowGeneName ? '隱藏名稱' : '顯示名稱'}
         </Button>
         <Button onClick={handleBingoDrawerOpen}>
@@ -358,6 +369,19 @@ function HomePage({
                 setHoveredGene(null);
               };
 
+              const handleGenPinned = () => {
+                if (!gene) return;
+
+                setGeneTable((state) => {
+                  const newGeneTable = new Array(...state);
+                  newGeneTable[rowIndex][columnIndex] = {
+                    ...gene,
+                    pinned: !gene.pinned,
+                  };
+                  return newGeneTable;
+                });
+              };
+
               return (
                 <GeneListItem
                   key={gene?.id ?? `empty-gene-${rowIndex}-${columnIndex}`}
@@ -367,7 +391,19 @@ function HomePage({
                   onClick={handleGeneClick}
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
-                />
+                >
+                  {gene && (
+                    <ListItemPinButton
+                      className={STOP_CLICK_PROPAGATION_CLASSNAME}
+                      type="text"
+                      size="small"
+                      icon={
+                        gene.pinned ? <PushpinFilled /> : <PushpinOutlined />
+                      }
+                      onClick={handleGenPinned}
+                    />
+                  )}
+                </GeneListItem>
               );
             }}
           />
