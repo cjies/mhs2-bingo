@@ -40,6 +40,7 @@ const GENE_LEVEL_MAP: Record<string, GENE_LEVEL> = {
   '【小】': GENE_LEVEL.S,
   '【中】': GENE_LEVEL.M,
   '【大】': GENE_LEVEL.L,
+  '【特】': GENE_LEVEL.XL,
   '【特大】': GENE_LEVEL.XL,
 };
 
