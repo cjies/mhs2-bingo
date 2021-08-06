@@ -18,6 +18,7 @@ export interface Gene {
   minLevel: number;
   sp: number;
   monsters: string[];
+  monstersDescription: string;
   locked?: boolean;
 }
 

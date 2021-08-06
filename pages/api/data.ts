@@ -84,6 +84,7 @@ const fetchGenesByType = async (geneType: GENE_TYPE): Promise<Gene[]> => {
       minLevel: +data['所需等級'] ?? 0,
       sp: +data['消耗羈絆值'] || 0,
       monsters: data['可持有隨行獸'].split(/\n|、/).map((m) => m.trim()),
+      monstersDescription: data['隨行獸備註'],
     };
 
     return gene;

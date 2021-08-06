@@ -57,6 +57,7 @@ const GeneItemDescriptions: FC<Props> = ({ gene }) => {
     minLevel,
     sp,
     monsters,
+    monstersDescription,
   } = gene || {};
   const descriptionItemProps = useMemo(
     () => ({
@@ -134,6 +135,7 @@ const GeneItemDescriptions: FC<Props> = ({ gene }) => {
             onClick={setIsMonsterListExpand}
           >
             {(monsters || []).join(', ')}
+            {monstersDescription ? ` (${monstersDescription})` : null}
           </ShowMoreText>
         </MonsterList>
       </Descriptions.Item>
