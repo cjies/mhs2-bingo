@@ -55,7 +55,7 @@ const ListItemLockButton = styled(Button)`
   position: absolute;
   top: 0.5rem;
   right: 1rem;
-  z-index: 9;
+  z-index: 1;
 
   > span {
     pointer-events: none;
