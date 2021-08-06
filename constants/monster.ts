@@ -3,7 +3,7 @@ import { Monster } from '@/interfaces/monster';
 export const MONSTERS = [
   { name: '草食龍', icon: '/images/monsters/aptonoth.png' },
   { name: '迅猛龍王', icon: '/images/monsters/velocidrome.png' },
-  { name: '騷鳥', icon: '/images/monsters/kulu-ya-ku.png' },
+  { name: '搔鳥', icon: '/images/monsters/kulu-ya-ku.png' },
   { name: '怪鳥', icon: '/images/monsters/yian-kut-ku.png' },
   { name: '野豬王', icon: '/images/monsters/bulldrome.png' },
   { name: '毒妖鳥', icon: '/images/monsters/pukei-pukei.png' },
@@ -39,7 +39,7 @@ export const MONSTERS = [
   { name: '冰牙龍', icon: '/images/monsters/barioth.png' },
   { name: '風漂龍', icon: '/images/monsters/legiana.png' },
   { name: '毒猛龍王', icon: '/images/monsters/iodrome.png' },
-  { name: '黃速龍王', icon: '/images/monsters/gendrome.png' },
+  { name: '痺猛龍王', icon: '/images/monsters/gendrome.png' },
   { name: '砂龍王', icon: '/images/monsters/cephadrome.png' },
   { name: '白猿狐', icon: '/images/monsters/ash-kecha-wacha.png' },
   { name: '紫毒鳥', icon: '/images/monsters/purple-gypceros.png' },
@@ -88,6 +88,8 @@ export const MONSTERS = [
   { name: '加爾克(電)', icon: '/images/monsters/palamute-thunder.png' },
   { name: '加爾克(冰)', icon: '/images/monsters/palamute-ice.png' },
   { name: '加爾克(龍)', icon: '/images/monsters/palamute-dragon.png' },
+  { name: '青電主電龍', icon: '/images/monsters/boltreaver-astalos.png' },
+  { name: '燼滅刃斬龍', icon: '/images/monsters/hellblade-glavenus.png' },
 ];
 
 export const UNKNOWN_MONSTER = {
