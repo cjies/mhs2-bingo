@@ -20,7 +20,7 @@ import { Gene as IGene } from '@/interfaces/gene';
 import Gene, { EmptyGene } from '../Gene';
 import GeneItemDescriptions from './GeneItemDescriptions';
 
-const ListItem = styled(List.Item)<{ $disabled?: boolean; $pinned?: boolean }>`
+const ListItem = styled(List.Item)<{ $disabled?: boolean; $locked?: boolean }>`
   position: relative;
 
   ${(props) =>
@@ -38,7 +38,7 @@ const ListItem = styled(List.Item)<{ $disabled?: boolean; $pinned?: boolean }>`
     `}
 
   ${(props) =>
-    props.$pinned &&
+    props.$locked &&
     css`
       &::after {
         content: '';
@@ -144,7 +144,7 @@ const GeneListItem: FC<Props> = ({
   return (
     <ListItem
       $disabled={disabled}
-      $pinned={gene?.pinned}
+      $locked={gene?.locked}
       onClick={handleItemClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}

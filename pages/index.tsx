@@ -1,9 +1,11 @@
 import {
   GithubOutlined,
+  LockFilled,
   PushpinFilled,
   PushpinOutlined,
   SyncOutlined,
   TableOutlined,
+  UnlockOutlined,
 } from '@ant-design/icons';
 import { Button, List, Space, Typography } from 'antd';
 import { GetServerSideProps } from 'next';
@@ -49,10 +51,11 @@ const ActionButtonsContainer = styled(Space)`
   margin: 1rem 0 2rem;
 `;
 
-const ListItemPinButton = styled(Button)`
+const ListItemLockButton = styled(Button)`
   position: absolute;
   top: 0.5rem;
   right: 1rem;
+  z-index: 9;
 
   > span {
     pointer-events: none;
@@ -326,7 +329,7 @@ function HomePage({
 
       <ActionButtonsContainer align="center">
         <Button onClick={handleForceShowGeneNameToggle}>
-          {forceShowGeneName ? <PushpinFilled /> : <PushpinOutlined />}
+          {forceShowGeneName ? <PushpinOutlined /> : <PushpinFilled />}
           {forceShowGeneName ? '隱藏名稱' : '顯示名稱'}
         </Button>
         <Button onClick={handleBingoDrawerOpen}>
@@ -369,14 +372,14 @@ function HomePage({
                 setHoveredGene(null);
               };
 
-              const handleGenPinned = () => {
+              const handleGeneLock = () => {
                 if (!gene) return;
 
                 setGeneTable((state) => {
                   const newGeneTable = new Array(...state);
                   newGeneTable[rowIndex][columnIndex] = {
                     ...gene,
-                    pinned: !gene.pinned,
+                    locked: !gene.locked,
                   };
                   return newGeneTable;
                 });
@@ -393,14 +396,11 @@ function HomePage({
                   onMouseLeave={handleMouseLeave}
                 >
                   {gene && (
-                    <ListItemPinButton
+                    <ListItemLockButton
                       className={STOP_CLICK_PROPAGATION_CLASSNAME}
-                      type="text"
-                      size="small"
-                      icon={
-                        gene.pinned ? <PushpinFilled /> : <PushpinOutlined />
-                      }
-                      onClick={handleGenPinned}
+                      type={gene.locked ? 'default' : 'text'}
+                      icon={gene.locked ? <UnlockOutlined /> : <LockFilled />}
+                      onClick={handleGeneLock}
                     />
                   )}
                 </GeneListItem>

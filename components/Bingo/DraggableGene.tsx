@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 
 import BingoGene, { Props } from './BingoGene';
 
-const DroppableContainer = styled.div<{ $overing: boolean; $pinned?: boolean }>`
+const DroppableContainer = styled.div<{ $overing: boolean; $locked?: boolean }>`
   position: relative;
   transition: filter 0.2s ease;
 
@@ -15,7 +15,7 @@ const DroppableContainer = styled.div<{ $overing: boolean; $pinned?: boolean }>`
     `}
 
   ${(props) =>
-    props.$pinned &&
+    props.$locked &&
     css`
       &::after {
         content: '';
@@ -49,7 +49,7 @@ const StyledBingoGene = styled(BingoGene)<{ $dragging: boolean }>`
 
 const DraggableGene: FC<Props> = (props) => {
   const { gene, rowIndex, columnIndex } = props;
-  const isPinned = gene?.pinned;
+  const isLocked = gene?.locked;
 
   const {
     setNodeRef: setDraggableNodeRef,
@@ -59,20 +59,20 @@ const DraggableGene: FC<Props> = (props) => {
   } = useDraggable({
     id: `draggable-gene-${rowIndex}-${columnIndex}`,
     data: { rowIndex, columnIndex, gene },
-    disabled: isPinned,
+    disabled: isLocked,
   });
 
   const { setNodeRef: setDroppableNodeRef, isOver } = useDroppable({
     id: `droppable-gene-${rowIndex}-${columnIndex}`,
     data: { rowIndex, columnIndex, gene },
-    disabled: isPinned,
+    disabled: isLocked,
   });
 
   return (
     <DroppableContainer
       ref={setDroppableNodeRef}
       $overing={isOver}
-      $pinned={isPinned}
+      $locked={isLocked}
     >
       <StyledBingoGene
         ref={setDraggableNodeRef}
