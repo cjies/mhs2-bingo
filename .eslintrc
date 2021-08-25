@@ -2,7 +2,6 @@
   "extends": [
     "next",
     "next/core-web-vitals",
-    "plugin:import/recommended",
     "prettier"
   ],
   "plugins": [
