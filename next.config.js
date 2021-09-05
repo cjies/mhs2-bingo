@@ -3,7 +3,7 @@ const withLess = require('next-with-less');
 
 module.exports = withLess({
   reactStrictMode: true,
-
+  pageExtensions: ['page.tsx', 'page.ts', 'api.ts'],
   webpack: function (config, { dev, isServer }) {
     // Fixes npm packages that depend on `fs` module
     if (!isServer) {

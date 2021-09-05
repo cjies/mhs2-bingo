@@ -1,6 +1,6 @@
 import { ATTACK_TYPE } from '@/constants/attackType';
 import { GENE_LEVEL, GENE_TYPE } from '@/constants/gene';
-import { SKILL_TYPE } from '@/constants/skillType';
+import { ACTIVE_SKILL_TYPE, SKILL_TYPE } from '@/constants/skillType';
 
 import { Maybe, Opaque } from './common';
 
@@ -8,17 +8,18 @@ export type GeneId = Opaque<'GENE_ID', string>;
 
 export interface Gene {
   id: GeneId;
+  legacyId?: GeneId;
   type: GENE_TYPE;
   level: GENE_LEVEL | null;
   attackType: ATTACK_TYPE;
   name: string;
   skillType: SKILL_TYPE;
+  activeSkillType: ACTIVE_SKILL_TYPE | null;
   skillName: string;
   skillDescription: string;
   minLevel: number;
   sp: number;
   monsters: string[];
-  monstersDescription: string;
   locked?: boolean;
 }
 

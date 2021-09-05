@@ -56,7 +56,9 @@ export function decodeGeneTableFromQuery(
   }
 
   geneIds.forEach((geneId, index) => {
-    const validGene = allGenes.find(({ id }) => id === geneId);
+    const validGene = allGenes.find(
+      ({ id, legacyId }) => id === geneId || legacyId === geneId
+    );
 
     if (!validGene) {
       return;
