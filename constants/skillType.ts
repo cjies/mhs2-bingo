@@ -3,3 +3,11 @@ export enum SKILL_TYPE {
   PASSIVE = 'PASSIVE',
   NONE = 'NONE',
 }
+
+export enum ACTIVE_SKILL_TYPE {
+  ENEMY_SINGLE = 'ENEMY_SINGLE',
+  ENEMY_ALL = 'ENEMY_ALL',
+  SELF = 'SELF',
+  OUR_SINGLE = 'OUR_SINGLE',
+  OUR_ALL = 'OUR_ALL',
+}

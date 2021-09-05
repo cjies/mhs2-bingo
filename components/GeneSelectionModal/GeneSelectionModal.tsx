@@ -13,7 +13,7 @@ import styled from 'styled-components';
 import { ATTACK_TYPE } from '@/constants/attackType';
 import { PRIMARY_BACKGROUND_COLOR, PRIMARY_COLOR } from '@/constants/common';
 import { GENE_TYPE } from '@/constants/gene';
-import { SKILL_TYPE } from '@/constants/skillType';
+import { ACTIVE_SKILL_TYPE, SKILL_TYPE } from '@/constants/skillType';
 import { Maybe } from '@/interfaces/common';
 import { Gene as IGene, GeneId } from '@/interfaces/gene';
 
@@ -101,7 +101,7 @@ const GeneSelectionModal: FC<Props> = ({
     ATTACK_TYPE | typeof ALL_TYPE
   >(ALL_TYPE);
   const [filteredSkillType, setFilteredSkillType] = useState<
-    SKILL_TYPE | typeof ALL_TYPE
+    SKILL_TYPE | ACTIVE_SKILL_TYPE | typeof ALL_TYPE
   >(ALL_TYPE);
 
   const filteredGenesByTab = useMemo(() => {
@@ -138,6 +138,14 @@ const GeneSelectionModal: FC<Props> = ({
         if (filteredSkillType === ALL_TYPE) {
           return true;
         }
+
+        if (filteredSkillType in ACTIVE_SKILL_TYPE) {
+          return (
+            gene.skillType === SKILL_TYPE.ACTIVE &&
+            gene.activeSkillType === filteredSkillType
+          );
+        }
+
         return gene.skillType === filteredSkillType;
       });
   }, [

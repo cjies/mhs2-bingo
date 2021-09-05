@@ -1,13 +1,14 @@
 import shortHash from 'shorthash2';
 
-import { GENE_LEVEL, GENE_TYPE } from '@/constants/gene';
+import { GENE_TYPE } from '@/constants/gene';
 import { Gene, GeneId } from '@/interfaces/gene';
 import parseCSV from '@/utils/parseCsv';
 
-import { ATTACK_TYPE_MAP, SKILL_TYPE_MAP } from './constants';
+import { ATTACK_TYPE_MAP } from './constants';
 
+type LegacyGene = Pick<Gene, 'id' | 'name'>;
 export type LegacyGenesMap = {
-  [name: string]: Gene;
+  [name: string]: LegacyGene;
 };
 
 const LEGACY_GENES_CSV_PATH = {
@@ -20,7 +21,9 @@ const LEGACY_GENES_CSV_PATH = {
   [GENE_TYPE.DRAGON]: 'csv/legacy/dragon.csv',
 };
 
-const fetchLegacyGenesByType = async (geneType: GENE_TYPE): Promise<Gene[]> => {
+const fetchLegacyGenesByType = async (
+  geneType: GENE_TYPE
+): Promise<LegacyGene[]> => {
   const csvRows = await parseCSV(LEGACY_GENES_CSV_PATH[geneType]);
 
   return csvRows.map((data, index) => {
@@ -28,21 +31,7 @@ const fetchLegacyGenesByType = async (geneType: GENE_TYPE): Promise<Gene[]> => {
     const attackType = ATTACK_TYPE_MAP[data['類型']];
     const id = shortHash(`${geneType}-${attackType}-${index}`) as GeneId;
 
-    const gene: Gene = {
-      id,
-      type: geneType,
-      level: (data['基因等級'] as GENE_LEVEL) || null,
-      attackType,
-      name,
-      skillType: SKILL_TYPE_MAP[data['主/被動']],
-      skillName: data['技能名稱'],
-      skillDescription: data['技能詳情'],
-      minLevel: +data['所需等級'] ?? 0,
-      sp: +data['消耗羈絆值'] || 0,
-      monsters: data['可持有隨行獸'].split(/\n|、/).map((m) => m.trim()),
-    };
-
-    return gene;
+    return { id, name } as LegacyGene;
   });
 };
 

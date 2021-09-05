@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { ATTACK_TYPE, ATTACK_TYPE_DARK_ICON } from '@/constants/attackType';
 import { GENE_TYPE, GENE_TYPE_ICON } from '@/constants/gene';
-import { SKILL_TYPE } from '@/constants/skillType';
+import { ACTIVE_SKILL_TYPE, SKILL_TYPE } from '@/constants/skillType';
 
 const Label = styled.div`
   padding-right: 1rem;
@@ -175,6 +175,51 @@ export const SKILL_TYPE_OPTIONS = [
     label: (
       <Label>
         <LabelText>主動技能</LabelText>
+      </Label>
+    ),
+    searchPlaceholder: '主動技能基因',
+  },
+  {
+    key: ACTIVE_SKILL_TYPE.ENEMY_SINGLE,
+    label: (
+      <Label>
+        <LabelText>主動 - 單一敵方</LabelText>
+      </Label>
+    ),
+    searchPlaceholder: '主動技能基因',
+  },
+  {
+    key: ACTIVE_SKILL_TYPE.ENEMY_ALL,
+    label: (
+      <Label>
+        <LabelText>主動 - 敵方全體</LabelText>
+      </Label>
+    ),
+    searchPlaceholder: '主動技能基因',
+  },
+  {
+    key: ACTIVE_SKILL_TYPE.SELF,
+    label: (
+      <Label>
+        <LabelText>主動 - 自身</LabelText>
+      </Label>
+    ),
+    searchPlaceholder: '主動技能基因',
+  },
+  {
+    key: ACTIVE_SKILL_TYPE.OUR_SINGLE,
+    label: (
+      <Label>
+        <LabelText>主動 - 單一我方</LabelText>
+      </Label>
+    ),
+    searchPlaceholder: '主動技能基因',
+  },
+  {
+    key: ACTIVE_SKILL_TYPE.OUR_ALL,
+    label: (
+      <Label>
+        <LabelText>主動 - 我方全體</LabelText>
       </Label>
     ),
     searchPlaceholder: '主動技能基因',
