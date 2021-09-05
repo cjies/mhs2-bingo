@@ -90,6 +90,9 @@ export const MONSTERS = [
   { name: '加爾克(龍)', icon: '/images/monsters/palamute-dragon.png' },
   { name: '青電主電龍', icon: '/images/monsters/boltreaver-astalos.png' },
   { name: '燼滅刃斬龍', icon: '/images/monsters/hellblade-glavenus.png' },
+  { name: '銀嶺巨獸', icon: '/images/monsters/elderfrost-gammoth.png' },
+  { name: '天眼泡狐龍', icon: '/images/monsters/soulseer-mizutsune.png' },
+  { name: '冰麒麟', icon: '/images/monsters/oroshi-kirin.png' },
 ];
 
 export const UNKNOWN_MONSTER = {
