@@ -8,6 +8,7 @@ export type GeneId = Opaque<'GENE_ID', string>;
 
 export interface Gene {
   id: GeneId;
+  legacyId?: GeneId;
   type: GENE_TYPE;
   level: GENE_LEVEL | null;
   attackType: ATTACK_TYPE;
@@ -18,7 +19,6 @@ export interface Gene {
   minLevel: number;
   sp: number;
   monsters: string[];
-  monstersDescription: string;
   locked?: boolean;
 }
 

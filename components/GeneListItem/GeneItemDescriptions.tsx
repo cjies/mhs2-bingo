@@ -1,7 +1,6 @@
-import { QuestionCircleOutlined } from '@ant-design/icons';
-import { Descriptions, Tooltip } from 'antd';
+import { Descriptions } from 'antd';
 import Image from 'next/image';
-import { FC, memo, useMemo, useState } from 'react';
+import React, { FC, memo, useMemo, useState } from 'react';
 import ShowMoreText from 'react-show-more-text';
 import styled from 'styled-components';
 
@@ -14,6 +13,8 @@ import { GENE_TYPE, GENE_TYPE_ICON } from '@/constants/gene';
 import { SKILL_TYPE } from '@/constants/skillType';
 import { Maybe } from '@/interfaces/common';
 import { Gene as IGene } from '@/interfaces/gene';
+
+import SkillDescriptionTooltip from './SkillDescriptionTooltip';
 
 const SkillName = styled.span`
   margin-left: 0.03rem;
@@ -57,7 +58,6 @@ const GeneItemDescriptions: FC<Props> = ({ gene }) => {
     minLevel,
     sp,
     monsters,
-    monstersDescription,
   } = gene || {};
   const descriptionItemProps = useMemo(
     () => ({
@@ -70,9 +70,13 @@ const GeneItemDescriptions: FC<Props> = ({ gene }) => {
     }),
     []
   );
-  const lastDescriptionItemProps = useMemo(
+  const monstersDescriptionItemProps = useMemo(
     () => ({
       ...descriptionItemProps,
+      labelStyle: {
+        ...descriptionItemProps.labelStyle,
+        alignItems: 'flex-start',
+      },
       style: { paddingBottom: '0.5rem' },
     }),
     [descriptionItemProps]
@@ -92,9 +96,7 @@ const GeneItemDescriptions: FC<Props> = ({ gene }) => {
             alt={type}
           />
           <SkillName>{skillName}</SkillName>
-          <Tooltip title={skillDescription}>
-            <QuestionCircleOutlined />
-          </Tooltip>
+          <SkillDescriptionTooltip text={skillDescription} />
         </Descriptions.Item>
       )}
 
@@ -124,7 +126,7 @@ const GeneItemDescriptions: FC<Props> = ({ gene }) => {
       <Descriptions.Item {...descriptionItemProps} label="消耗羈絆值">
         {sp ? `${sp} / 100` : '-- / --'}
       </Descriptions.Item>
-      <Descriptions.Item {...lastDescriptionItemProps} label="可持有隨行獸">
+      <Descriptions.Item {...monstersDescriptionItemProps} label="隨行獸">
         <MonsterList>
           <ShowMoreText
             lines={1}
@@ -134,8 +136,7 @@ const GeneItemDescriptions: FC<Props> = ({ gene }) => {
             expanded={isMonsterListExpand}
             onClick={setIsMonsterListExpand}
           >
-            {(monsters || []).join(', ')}
-            {monstersDescription ? ` (${monstersDescription})` : null}
+            {(monsters || []).join(', ') || '--'}
           </ShowMoreText>
         </MonsterList>
       </Descriptions.Item>
