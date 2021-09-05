@@ -7,6 +7,8 @@
 <br/>
 
 ## Licenses
+MIT license for source codes
 
-- MIT license for source codes
-- Genes data are powered by [夕日飛回(sdu60622)](https://forum.gamer.com.tw/C.php?bsn=5786&snA=162812) (請到巴哈支持原作者！)
+Genes data are powered by:
+- https://docs.google.com/spreadsheets/d/1SAzvxRxCqXqGX6cPEKSX5kwRc2q4j24cm54GWNQD4MU/htmlview
+- https://docs.google.com/spreadsheets/d/1ollm4cjdAGGQyMezr3UpumxlcKZhiF1RYh7K9EW_f7E/htmlview
