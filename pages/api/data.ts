@@ -36,14 +36,6 @@ const ATTACK_TYPE_MAP: Record<string, ATTACK_TYPE> = {
   無: ATTACK_TYPE.NONE,
 };
 
-const GENE_LEVEL_MAP: Record<string, GENE_LEVEL> = {
-  '【小】': GENE_LEVEL.S,
-  '【中】': GENE_LEVEL.M,
-  '【大】': GENE_LEVEL.L,
-  '【特】': GENE_LEVEL.XL,
-  '【特大】': GENE_LEVEL.XL,
-};
-
 const fetchGenesByType = async (geneType: GENE_TYPE): Promise<Gene[]> => {
   const basePath =
     process.env.NODE_ENV === 'production'
@@ -59,23 +51,10 @@ const fetchGenesByType = async (geneType: GENE_TYPE): Promise<Gene[]> => {
     const attackType = ATTACK_TYPE_MAP[data['類型']];
     const id = shortHash(`${geneType}-${attackType}-${index}`) as GeneId;
 
-    // parse gene level from name
-    const geneLevel = Object.entries(GENE_LEVEL_MAP).reduce<GENE_LEVEL | null>(
-      (level, [key, value], _, arr) => {
-        if (name.endsWith(key)) {
-          level = value;
-          arr.splice(1); // eject early by mutating iterated copy
-        }
-
-        return level;
-      },
-      null
-    );
-
     const gene: Gene = {
       id,
       type: geneType,
-      level: geneLevel,
+      level: (data['基因等級'] as GENE_LEVEL) || null,
       attackType,
       name,
       skillType: SKILL_TYPE_MAP[data['主/被動']],
@@ -107,6 +86,6 @@ export default async function handler(
     res.status(200).json({ genes, monsters });
   } catch (err) {
     console.error(err);
-    res.status(500).json(err);
+    res.status(500);
   }
 }
