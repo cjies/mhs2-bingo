@@ -21,9 +21,9 @@ interface LineProps {
 
 const Line = styled.div<LineProps>`
   position: absolute;
-  width: 90%;
+  width: 75%;
   height: ${(props) => props.$lineSize}rem;
-  border-radius: 0.25rem;
+  /* border-radius: 0.25rem; */
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
   background-color: ${(props) =>
     props.$isGeneTypeMatch || props.$isAttackTypeMatch
@@ -36,8 +36,10 @@ const Line = styled.div<LineProps>`
     content: '';
     position: absolute;
     height: 100%;
-    width: 12%;
-    left: -10%;
+    width: 24%;
+    left: -23%;
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
     background-color: ${GENE_BORDER_COLOR_MATCH};
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
 
@@ -48,8 +50,10 @@ const Line = styled.div<LineProps>`
     content: '';
     position: absolute;
     height: 100%;
-    width: 12%;
-    right: -10%;
+    width: 24%;
+    right: -23%;
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
     background-color: ${GENE_BORDER_COLOR_MATCH};
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
 
@@ -67,6 +71,7 @@ export const Indicator = styled.div<IndicatorProps>`
   align-items: center;
   justify-content: center;
   pointer-events: none;
+  user-select: none;
   z-index: 1;
 
   position: absolute;
@@ -79,14 +84,14 @@ export const Indicator = styled.div<IndicatorProps>`
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
 `;
 
-const MatchedAttackTypeIndicator = styled(Indicator)`
+export const MatchedAttackTypeIndicator = styled(Indicator)`
   left: 100%;
-  margin-left: ${(props) => props.$gapSize}rem;
+  margin-left: ${(props) => props.$gapSize * 2}rem;
 `;
 
-const MatchedGeneTypeIndicator = styled(Indicator)`
+export const MatchedGeneTypeIndicator = styled(Indicator)`
   right: 100%;
-  margin-right: ${(props) => props.$gapSize}rem;
+  margin-right: ${(props) => props.$gapSize * 2}rem;
 `;
 
 interface Props {

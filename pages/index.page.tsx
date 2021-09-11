@@ -42,7 +42,7 @@ const PageContainer = styled.div`
 const BingoContainer = styled.div`
   display: flex;
   justify-content: center;
-  padding: 3rem 4rem 4rem;
+  padding: 4rem 4rem;
 `;
 
 const ActionButtonsContainer = styled(Space)`
