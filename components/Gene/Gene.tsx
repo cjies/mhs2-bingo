@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { forwardRef, memo, MouseEventHandler } from 'react';
+import styled from 'styled-components';
 
 import { ATTACK_TYPE, ATTACK_TYPE_LIGHT_ICON } from '@/constants/attackType';
 import { DEFAULT_FONT_SIZE } from '@/constants/common';
@@ -11,6 +12,10 @@ import {
 } from '@/constants/gene';
 
 import EmptyGene from './EmptyGene';
+
+const Icon = styled(Image)`
+  pointer-events: none;
+`;
 
 interface Props {
   size: number; // in rem
@@ -61,7 +66,7 @@ const Gene = forwardRef<HTMLDivElement, Props>(
         {...props}
       >
         {attackTypeIcon && (
-          <Image
+          <Icon
             src={attackTypeIcon}
             width={iconSize}
             height={iconSize}
