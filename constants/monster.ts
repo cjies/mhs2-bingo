@@ -95,7 +95,7 @@ export const MONSTERS = [
   { name: '冰麒麟', icon: '/images/monsters/oroshi-kirin.png' },
 ];
 
-export const UNRELEASED_MONSTERS = ['大轟龍', '銀火龍', '金火龍', '黑炎王火龍'];
+export const UNRELEASED_MONSTERS = ['銀火龍', '金火龍'];
 
 export const UNKNOWN_MONSTER = {
   id: '0',
