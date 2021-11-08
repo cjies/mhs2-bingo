@@ -11,11 +11,12 @@
   "dependencies": {
     "@ant-design/icons": "^4.6.4",
     "@dnd-kit/core": "^3.1.1",
+    "@types/react-show-more-text": "^1.4.1",
     "antd": "^4.16.13",
     "copy-webpack-plugin": "^9.0.1",
     "js-base64": "^3.7.0",
     "neat-csv": "^6.0.1",
-    "next": "12.0.1",
+    "next": "11.1.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-show-more-text": "^1.5.0",
@@ -23,14 +24,13 @@
     "styled-components": "^5.3.1"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^12.0.1",
+    "@next/bundle-analyzer": "^11.1.2",
     "@types/react": "17.0.20",
-    "@types/react-show-more-text": "^1.4.1",
     "@types/styled-components": "^5.1.14",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "babel-plugin-styled-components": "^1.13.2",
     "eslint": "7.32.0",
-    "eslint-config-next": "12.0.1",
+    "eslint-config-next": "11.1.2",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.4.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -38,7 +38,7 @@
     "less": "^4.1.1",
     "less-loader": "^10.0.1",
     "next-compose-plugins": "^2.2.1",
-    "next-with-less": "^2.0.2",
+    "next-with-less": "^1.0.1",
     "prettier": "^2.4.0",
     "typescript": "~4.3.5"
   }
