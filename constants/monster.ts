@@ -95,11 +95,9 @@ export const MONSTERS = [
   { name: '冰麒麟', icon: '/images/monsters/oroshi-kirin.png' },
   { name: '大轟龍', icon: '/images/monsters/molten-tigrex.png' },
   { name: '黑炎王火龍', icon: '/images/monsters/dreadking-rathalos.png' },
-  // { name: '銀火龍', icon: '/images/monsters/silver-rathalos.png' },
-  // { name: '金火龍', icon: '/images/monsters/gold-rathian.png' },
+  { name: '銀火龍', icon: '/images/monsters/silver-rathalos.png' },
+  { name: '金火龍', icon: '/images/monsters/gold-rathian.png' },
 ];
-
-export const UNRELEASED_MONSTERS = ['銀火龍', '金火龍'];
 
 export const UNKNOWN_MONSTER = {
   id: '0',

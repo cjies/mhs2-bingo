@@ -1,7 +1,6 @@
 import shortHash from 'shorthash2';
 
 import { GENE_LEVEL } from '@/constants/gene';
-import { UNRELEASED_MONSTERS } from '@/constants/monster';
 import { SKILL_TYPE } from '@/constants/skillType';
 import { Gene, GeneId } from '@/interfaces/gene';
 import parseCSV from '@/utils/parseCsv';
@@ -31,13 +30,7 @@ const fetchGenes = async (legacyGenesMap: LegacyGenesMap): Promise<Gene[]> => {
   const filteredRows = csvRows.filter((data) => {
     const geneType = GENE_TYPE_MAP[data['屬性']];
     const attackType = ATTACK_TYPE_MAP[data['類型']];
-    const fixedMonster = data['固有'];
-
-    return !(
-      !geneType ||
-      !attackType ||
-      UNRELEASED_MONSTERS.includes(fixedMonster)
-    );
+    return geneType && attackType;
   });
 
   return filteredRows.map((data) => {
